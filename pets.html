@@ -580,8 +580,6 @@
 
   <script>
     // Your Blizzard API credentials
-    const clientId = "6389e5d046fe4fee9608db0cd88b3fc2";
-    const clientSecret = "z8KQhty3pXnnyRq8GbN8A6W1tzb1NlpS";
     
     // Configuration
     const ITEMS_PER_PAGE = 24;
@@ -1337,34 +1335,14 @@
     }
     
     // API Functions
-    async function getAccessToken() {
-      const cachedToken = getCachedData("wow-token");
-      if (cachedToken) return cachedToken;
-      
-      try {
-        const credentials = btoa(`${clientId}:${clientSecret}`);
-        const response = await fetch("https://oauth.battle.net/token", {
-          method: "POST",
-          headers: {
-            "Authorization": `Basic ${credentials}`,
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: "grant_type=client_credentials"
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Authentication failed (${response.status}: ${response.statusText})`);
-        }
-        
-        const data = await response.json();
-        setCachedData("wow-token", data.access_token);
-        return data.access_token;
-      } catch (error) {
-        console.error("Error getting token:", error);
-        throw error;
-      }
+    // Keep existing callers compatible; provider authentication happens only on the server.
+    async function getAccessToken() { return null; }
+    async function blizzardFetch(resource) {
+      const url = new URL(resource);
+      return fetch('/api/blizzard?path=' + encodeURIComponent(url.pathname) + '&locale=' + encodeURIComponent(url.searchParams.get('locale') || 'en_US'));
     }
-    
+    try {localStorage.removeItem('wow-token');sessionStorage.removeItem('wow-token');} catch {}
+
     async function fetchPetIndex(token) {
       const cacheKey = `wow-pet-index-${currentLanguage}`;
       const cachedData = getCachedData(cacheKey);
@@ -1374,11 +1352,7 @@
       }
       
       try {
-        const response = await fetch(`https://us.api.blizzard.com/data/wow/pet/index?namespace=static-us&locale=${currentLanguage}`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const response = await blizzardFetch(`https://us.api.blizzard.com/data/wow/pet/index?namespace=static-us&locale=${currentLanguage}`);
         
         if (!response.ok) {
           throw new Error(`API Error (${response.status}: ${response.statusText})`);
@@ -1559,11 +1533,7 @@
         const url = `https://us.api.blizzard.com/data/wow/pet/${petId}?namespace=static-us&locale=${currentLanguage}`;
         console.log("API URL:", url);
         
-        const response = await fetch(url, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const response = await blizzardFetch(url);
         
         console.log("API Response status:", response.status, response.statusText);
         
@@ -1581,11 +1551,7 @@
           try {
             console.log(`Fetching media for pet ${petId}`);
             const mediaUrl = `https://us.api.blizzard.com/data/wow/media/pet/${data.media.id}?namespace=static-us&locale=${currentLanguage}`;
-            const mediaResponse = await fetch(mediaUrl, {
-              headers: {
-                "Authorization": `Bearer ${token}`
-              }
-            });
+            const mediaResponse = await blizzardFetch(mediaUrl);
             
             console.log("Media API Response status:", mediaResponse.status);
             
@@ -1798,11 +1764,7 @@
       console.log(`Fetching item details from API for ID: ${itemId}`);
       try {
         const url = `https://us.api.blizzard.com/data/wow/item/${itemId}?namespace=static-us&locale=${currentLanguage}`;
-        const response = await fetch(url, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const response = await blizzardFetch(url);
         
         if (!response.ok) {
           throw new Error(`API Error for item ${itemId}: ${response.status}`);
@@ -1832,11 +1794,7 @@
       console.log(`Fetching creature details from API for ID: ${creatureId}`);
       try {
         const url = `https://us.api.blizzard.com/data/wow/creature/${creatureId}?namespace=static-us&locale=${currentLanguage}`;
-        const response = await fetch(url, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const response = await blizzardFetch(url);
         
         if (!response.ok) {
           // It's common for creature details not to exist for battle pets, don't throw error

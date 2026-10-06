@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/blizzard.js": {
+      "maxDuration": 30
+    }
+  }
+}
