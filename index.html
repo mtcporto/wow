@@ -287,7 +287,7 @@
   <script>
     // Your Blizzard API credentials - remain the same
     const clientId = "6389e5d046fe4fee9608db0cd88b3fc2";
-    const clientSecret = "z8KQhty3pXnnyRq8GbN8A6W1tzb1NlpS";
+    const clientSecret = ""; // Never embed a provider secret in browser code.
     
     // Default language and getting language from sessionStorage if available
     let currentLanguage = sessionStorage.getItem("wow-language") || "en_US";
@@ -485,6 +485,7 @@
     }
 
     async function getAccessToken() {
+      throw new Error("Configure a server-side Blizzard integration; embedded credentials were removed.");
       // Check if we have a cached token that's not expired
       const cachedToken = getCachedData("wow-token");
       if (cachedToken) return cachedToken;

@@ -581,7 +581,7 @@
   <script>
     // Your Blizzard API credentials
     const clientId = "6389e5d046fe4fee9608db0cd88b3fc2";
-    const clientSecret = "z8KQhty3pXnnyRq8GbN8A6W1tzb1NlpS";
+    const clientSecret = ""; // Never embed a provider secret in browser code.
     
     // Configuration
     const ITEMS_PER_PAGE = 24;
@@ -1338,6 +1338,7 @@
     
     // API Functions
     async function getAccessToken() {
+      throw new Error("Configure a server-side Blizzard integration; embedded credentials were removed.");
       const cachedToken = getCachedData("wow-token");
       if (cachedToken) return cachedToken;
       
