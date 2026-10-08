@@ -1339,7 +1339,9 @@
     async function getAccessToken() { return null; }
     async function blizzardFetch(resource) {
       const url = new URL(resource);
-      return fetch('/api/blizzard?path=' + encodeURIComponent(url.pathname) + '&locale=' + encodeURIComponent(url.searchParams.get('locale') || 'en_US'));
+      const local = ['localhost','127.0.0.1'].includes(window.location.hostname);
+      const base = local ? 'http://127.0.0.1:8788' : window.location.pathname.startsWith('/wow/') ? 'https://wow-one-pi.vercel.app' : '';
+      return fetch(base + '/api/blizzard?path=' + encodeURIComponent(url.pathname) + '&locale=' + encodeURIComponent(url.searchParams.get('locale') || 'en_US'));
     }
     try {localStorage.removeItem('wow-token');sessionStorage.removeItem('wow-token');} catch {}
 
