@@ -1067,3 +1067,64 @@ a.relation-card:hover { border-color:var(--gold); }
 @media(max-width:640px) { .instance-map-pin { width:34px; height:34px; }.instance-map-toolbar .back-btn { padding:8px 10px; font-size:12px; } }
 
 #explorer-intro:empty { display:none; }
+
+/* Native game-data browsers share the catalogue's restrained palette. */
+.more-navigation { position:relative; }
+.more-navigation summary { cursor:pointer; color:var(--text-muted,#a6b5c6); padding:8px; }
+.more-navigation > div { position:absolute; right:0; top:100%; z-index:40; min-width:180px; padding:8px; background:#121b25; border:1px solid #33404f; border-radius:8px; box-shadow:0 8px 24px #0008; }
+.more-navigation > div a { display:block; padding:9px 12px; }
+.native-query-form { display:flex; flex-wrap:wrap; gap:16px; align-items:end; margin:24px 0; }
+.native-query-form label { display:flex; flex-direction:column; gap:6px; flex:1 1 160px; }
+.native-query-form input,.native-query-form select { width:100%; padding:10px 12px; background:#111922; border:1px solid #33404f; border-radius:6px; color:#e6ecf2; font:inherit; }
+.native-tabs,.native-pagination { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:24px 0; }
+.native-tabs [aria-current="page"] { color:#f4bb45; border-color:#806329; }
+.native-pagination button:disabled { opacity:.4; cursor:default; }
+.native-description { white-space:pre-line; max-width:80ch; }
+.native-item-link { display:inline-flex; align-items:center; gap:12px; }
+.native-item-link .wow-item-icon { flex:0 0 48px; }
+.native-item-tooltip { position:fixed; z-index:1000; pointer-events:none; max-height:calc(100vh - 16px); overflow:auto; width:300px; }
+.character-summary { display:grid; grid-template-columns:minmax(160px,300px) 1fr; gap:32px; align-items:center; margin:24px 0; }
+.character-summary img { width:100%; height:360px; object-fit:contain; background:#0a1018; border-radius:8px; }
+.ranking-members { display:flex; flex-wrap:wrap; gap:8px; }
+@media(max-width:600px) { .character-summary { grid-template-columns:1fr; } .native-query-form label { flex-basis:100%; } }
+.ranking-member { display:inline-flex; flex-direction:column; margin:4px 14px 4px 0; }
+.ranking-spec { font-size:.78rem; }
+
+.quest-browse-nav { display:flex; flex-wrap:wrap; gap:10px; margin:24px 0; }
+.quest-layout { display:grid; grid-template-columns:minmax(0,1fr) 250px; gap:40px; align-items:start; margin:32px 0; }
+.quest-section { margin-bottom:32px; }
+.quest-section h2,.quest-facts h2 { margin:0 0 16px; font-size:1.2rem; }
+.quest-content .native-description { line-height:1.7; }
+.quest-facts { padding:20px; background:#111923; border:1px solid var(--line); border-radius:8px; }
+.quest-facts dl { margin:0; }
+.quest-facts dt { font-size:.8rem; color:var(--muted); margin-top:14px; }
+.quest-facts dd { margin:3px 0 0; }
+.quest-reward-group { margin:20px 0; }
+.quest-reward-group h3 { font:inherit; color:var(--muted); margin-bottom:16px; }
+.quest-reward-items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.quest-reward-item { min-width:0; }
+.quest-reward-requirements { font-size:.78rem; line-height:1.5; margin:8px 0 0; }
+.quest-reward-requirements a { color:var(--muted); }
+.quest-gains { margin-top:24px; padding-top:12px; border-top:1px solid var(--line); }
+@media(max-width:800px) { .quest-layout { grid-template-columns:1fr; gap:24px; } .quest-facts { grid-row:1; } .quest-facts dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 16px; } .quest-facts dl>dt,.quest-facts dl>dd { grid-column:1 / -1; } }
+@media(max-width:500px) { .quest-reward-items { grid-template-columns:1fr; } }
+
+.toy-items { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 24px; }
+.toy-item { padding:18px 0; border-bottom:1px solid var(--line); min-width:0; }
+.toy-item .native-item-link { width:100%; font-size:.95rem; text-decoration:none; }
+.toy-source,.toy-quality { display:block; margin:6px 0 0 60px; font-size:.8rem; }
+.toy-source { color:var(--muted); }
+.toy-quality { font-size:.72rem; }
+@media(max-width:1000px) { .toy-items { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .toy-items { grid-template-columns:1fr; } }
+.auction-item-search { margin:32px 0; }
+.auction-search-items { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.auction-search-item { display:flex; align-items:center; gap:12px; padding:16px; border:1px solid var(--line); border-radius:8px; text-decoration:none; min-width:0; }
+.auction-search-item:hover,.auction-search-item:focus-visible { background:#172331; border-color:#82652f; }
+.auction-search-item .wow-item-icon { flex:0 0 48px; }
+.auction-search-item strong,.auction-search-item small { display:block; }
+.auction-search-item small { font-size:.75rem; line-height:1.5; color:var(--muted); margin-top:5px; }
+@media(max-width:950px) { .auction-search-items { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .auction-search-items { grid-template-columns:1fr; } }
+.auction-display-options { display:flex; align-items:center; gap:8px; margin:16px 0; color:var(--muted); font-size:.85rem; cursor:pointer; }
+.auction-display-options input { accent-color:#dba844; }

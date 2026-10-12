@@ -16,7 +16,8 @@
     "verify:http": "node scripts/verify-http.cjs",
     "build:local": "NEXT_PUBLIC_BASE_PATH=/wow NEXT_DIST_DIR=.next-local next build",
     "start:local": "NEXT_PUBLIC_BASE_PATH=/wow NEXT_DIST_DIR=.next-local next start --hostname 127.0.0.1 --port 8788",
-    "maps:update": "python3 scripts/update-instance-maps.py"
+    "maps:update": "python3 scripts/update-instance-maps.py",
+    "toys:update": "node --env-file=.env.local scripts/update-toy-catalogue.cjs"
   },
   "engines": {
     "node": "24.x"
@@ -25,7 +26,9 @@
     "next": "^16.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
+    "stream-json": "^3.7.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

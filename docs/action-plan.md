@@ -116,3 +116,30 @@
 ## Mudança de direção: calculador de talentos
 
 A base agora é Next.js, React e TypeScript. A árvore atual permanece de consulta; alocação de pontos, validação, exportação, Google Auth e Turso são próximas entregas. A fronteira de compatibilidade e a ordem de implementação estão em [architecture.md](architecture.md).
+
+## Recursos públicos integrados — outubro de 2026
+
+- Missões: áreas, categorias e tipos; detalhes, requisitos e recompensas; links para itens e reputações.
+- Reputações: facções, relações e faixas de reputação (incluindo a faixa de ID 0).
+- Brinquedos: catálogo e item de coleção, com ícone e informações flutuantes.
+- Leilões: mercadorias regionais ou reino conectado, sempre por ID de item; preços em moedas, quantidades e paginação. O servidor lê o snapshot em streaming e mantém até 20 mil ofertas mais baratas por item; o total continua indicando todas as ofertas. Cache de 60 segundos, sem promessa de atualização em tempo real.
+- Rankings: temporadas e modalidades PvP, Míticas+ por reino/masmorra/semana e Hall da Fama por raide/facção. Links dos participantes para perfis públicos.
+- Personagens: consulta pública por região, reino e nome; equipamento, especializações, reputações, missões concluídas, montarias e mascotes. Dados ausentes ou perfis não disponíveis são informados, sem inferir coleções completas. Autenticação pessoal Battle.net não foi implementada; Google Auth futuro não concede acesso a contas Battle.net.
+
+**Lembrete solicitado: retomar o talent calculator após este bloco.** A próxima entrega deve permitir distribuir/remover pontos, validar pré-requisitos e limites das três árvores, selecionar talentos de escolha e salvar/exportar uma build. Google Auth e Turso continuam posteriores à base funcional.
+
+### Brinquedos como itens
+
+O catálogo usa o item real de cada brinquedo (ID de coleção é distinto do ID do item), ícones oficiais e cores de qualidade. Os filtros são fonte de obtenção e qualidade. As 12 fontes vêm do campo `source` da Blizzard; não são categorias inventadas. Um snapshot localizado evita consultas de detalhe/mídia por linha ao abrir a página; os tooltips consultam o item sob demanda. `npm run toys:update` renova o catálogo completo e só substitui o arquivo após uma coleta bem-sucedida.
+
+### Busca de leilões por nome
+
+A entrada da Auction House usa nome localizado, seguida da seleção do item por ícone/nome/tipo. O ID existe apenas na URL e na chamada interna. O proxy permite Item Search com nome validado, limite de 12 resultados por página e campo localizado; palavras são combinadas em filtros do mesmo campo para evitar correspondências apenas com uma parte do nome. A seleção preserva região, mercado e reino e só então consulta as ofertas. Pesquisa de catálogo não implica disponibilidade no mercado escolhido.
+
+### Leitura e apresentação de ofertas
+
+A tabela omite IDs de leilões. Tempo restante é opcional (desativado inicialmente), com rótulos localizados; lances aparecem apenas no mercado de reino. Snapshots de até 32 MiB usam parsing nativo para reduzir tempo de processamento; arquivos maiores mantêm a leitura incremental. Os dois caminhos têm teste de equivalência com chunks pequenos. O cache de consulta por item continua em 60 segundos; a primeira consulta ainda depende do download da Blizzard.
+
+### Enquadramento dos personagens
+
+O render `main-raw` contém margens transparentes que deixavam o personagem pequeno. Uma rota de imagem recorta essas margens automaticamente, preserva a silhueta completa e mantém uma margem de segurança, sem depender da raça ou de zoom fixo. Aceita apenas renders PNG de personagens no host oficial da Blizzard, com limites de download/dimensões e cache de cinco minutos. Se a versão enquadrada falhar, a interface usa o original.

@@ -11,6 +11,18 @@ interface PlayableClass {
 }
 const groups = [
   {
+    pt: "Missões, coleções e jogadores",
+    en: "Quests, collections and players",
+    links: [
+      ["Quests", "Missões", "/quests"],
+      ["Reputations", "Reputações", "/reputations"],
+      ["Toys", "Brinquedos", "/toys"],
+      ["Auctions", "Leilões", "/auctions"],
+      ["Rankings", "Rankings", "/rankings"],
+      ["Character profiles", "Perfis de personagens", "/characters"],
+    ],
+  },
+  {
     pt: "Classes e especializações",
     en: "Classes and specializations",
     links: [
@@ -174,7 +186,11 @@ export function ClassCatalogue() {
                     className="feature-btn"
                     key={query}
                     href={assetPath(
-                      query === "pets" ? "/pets" : "/explore?" + query,
+                      query.startsWith("/")
+                        ? query
+                        : query === "pets"
+                          ? "/pets"
+                          : "/explore?" + query,
                     )}
                   >
                     {pt ? br : en}

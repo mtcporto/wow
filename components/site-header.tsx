@@ -31,6 +31,23 @@ export function SiteHeader() {
             {locale === "pt_BR" ? pt : en}
           </a>
         ))}
+        <details className="more-navigation">
+          <summary>{locale === "pt_BR" ? "Mais" : "More"}</summary>
+          <div>
+            {[
+              ["quests", "Missões", "Quests"],
+              ["reputations", "Reputações", "Reputations"],
+              ["toys", "Brinquedos", "Toys"],
+              ["auctions", "Leilões", "Auctions"],
+              ["rankings", "Rankings", "Rankings"],
+              ["characters", "Personagens", "Characters"],
+            ].map(([path, pt, en]) => (
+              <a key={path} href={assetPath("/" + path)}>
+                {locale === "pt_BR" ? pt : en}
+              </a>
+            ))}
+          </div>
+        </details>
       </nav>
     </header>
   );

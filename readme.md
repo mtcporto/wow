@@ -97,3 +97,7 @@ Talentos, habilidades raciais/PvP e links de itens oferecem janelas flutuantes a
 O Covil de Gruul já tem mapa local, zoom, rolagem/arraste, marcadores selecionáveis e links entre encontros. A planta usa texturas originais do jogo; os marcadores usam posições normalizadas de `JournalEncounter` do cliente, importadas de Wago.tools. Esses dados complementam a API web da Blizzard.
 
 Para atualizar: instale `scripts/requirements-maps.txt` no ambiente Python e execute `npm run maps:update`. O importador aceita `--instance ID` e `--build VERSÃO`; salva somente imagens convertidas e um catálogo compacto em `public/`. Os nomes localizados existentes são preservados. O build do Next não depende de Wago nem de Python, pois usa o snapshot já importado.
+
+## Consultas públicas adicionais
+
+O menu **Mais / More** e a página inicial oferecem missões, reputações, brinquedos, leilões, rankings e perfis públicos. Leilões usam busca por nome e seleção do item; a consulta de ofertas pode levar alguns segundos para filtrar o snapshot da Blizzard; commodities usam mercado regional e equipamentos usam reino conectado. Rankings incluem PvP, Míticas+ e Hall da Fama histórico. Perfis não exigem login e não acessam dados privados da conta. Veja [docs/action-plan.md](docs/action-plan.md) para limites e a próxima etapa: talent calculator.
