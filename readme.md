@@ -1,8 +1,8 @@
-# WoW Pet Explorer
+# Azeroth Explorer
 
 ## Descrição
 
-WoW Pet Explorer é uma aplicação web que permite explorar e visualizar informações detalhadas sobre os mascotes (pets) do jogo World of Warcraft. A aplicação consome a API oficial da Blizzard para fornecer dados atualizados sobre todos os mascotes disponíveis no jogo.
+Azeroth Explorer é um catálogo conectado de World of Warcraft: classes, raças, especializações, talentos, battle pets, criaturas domáveis, montarias, Journal, profissões, transmog, housing, conquistas, reinos e mídia oficial. O frontend continua em HTML, CSS e JavaScript. A API Node autentica com a Blizzard no servidor; os detalhes carregam sob demanda e os catálogos têm busca e paginação.
 
 ## Tecnologias Utilizadas
 
@@ -64,3 +64,24 @@ Este projeto é fornecido para fins educacionais e de pesquisa. World of Warcraf
 
 - Dados e imagens fornecidos pela API oficial da Blizzard Entertainment
 - Inspiração de design baseada em warcraftpets.com e wowhead.com
+## Exploração conectada
+
+Os cartões de classe levam a `explore.html?class=ID`. A página conecta raças, especializações, talentos e montarias de classe. Hunters têm uma área de famílias e criaturas domáveis, distinta do catálogo de battle pets. As buscas são paginadas; detalhes e renders carregam sob demanda.
+
+Use `npm run mounts:update` para renovar `data/mounts.json` e `data/class-mounts.json` após patches. O plano de expansão está em [docs/action-plan.md](docs/action-plan.md); as fontes das imagens estão em [assets/SOURCES.md](assets/SOURCES.md).
+
+O catálogo completo fica em `explore.html?mounts=1`, com filtros e paginação. O Journal começa em `explore.html?journal=1` e liga expansões, masmorras/raides, encontros e seus itens. A página de item preserva o retorno ao encontro que o originou.
+
+As especializações apresentam árvores de talentos interativas, com abas para classe, especialização e árvores heroicas elegíveis. Selecionar um talento mostra habilidades, graus e conexões, com zoom e modo lista. A visualização é de consulta; não distribui pontos nem exporta builds.
+
+Profissões começam em `explore.html?professions=1` e conectam linhas de habilidade, categorias, receitas, materiais e itens produzidos. As receitas têm busca e paginação; variantes Aliança/Horda ficam separadas e o retorno do item preserva a origem na receita.
+
+Conjuntos de transmog ficam em `explore.html?transmog=1`, com busca e paginação. Cada conjunto abre suas aparências e os itens correspondentes. Itens do Journal e das receitas também ligam às suas aparências, mantendo links de retorno à origem. A mídia é a fornecida pela API; não há simulação 3D nem leitura das coleções pessoais do jogador.
+
+Housing começa em `explore.html?housing=decor`. Os catálogos de decoração, estruturas, pontos de encaixe e ambientes têm busca e paginação. Decoração liga ao item correspondente; estruturas ligam aos seus pontos de encaixe. Os dados são do catálogo público, sem editor 3D nem consulta de casas pessoais.
+
+Conquistas começam em `explore.html?achievements=1`, com categorias, busca e paginação. Os detalhes ligam critérios, conquistas anteriores/seguintes e itens de recompensa. Os critérios são requisitos do catálogo, sem indicação de progresso pessoal.
+
+Reinos começam em `explore.html?realms=1`; regiões em `explore.html?regions=1`. Os dados dinâmicos são consultados no host oficial da região selecionada (US/EU/KR/TW). Reinos ligam aos seus grupos conectados e aos estados informados pela API; a interface oferece nova consulta sem prometer estado instantâneo.
+
+A galeria oficial começa em `explore.html?media=all`, com vídeos, quadrinhos, contos, livros e áudio. Os metadados ficam em `data/media.json`, os conteúdos abrem no site oficial e as imagens carregam sob demanda. Para renovar o catálogo, execute `npm run media:update` com Python 3 instalado localmente.

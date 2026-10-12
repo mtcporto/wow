@@ -1,0 +1,438 @@
+{
+  "checkedAt": "2026-10-12",
+  "region": "us",
+  "namespace": "static-us",
+  "observedNamespace": "static-12.1.0_68914-us",
+  "probes": [
+    {
+      "path": "/data/wow/playable-race/1",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "gender_name",
+        "faction",
+        "is_selectable",
+        "is_allied_race",
+        "playable_classes",
+        "racial_spells"
+      ]
+    },
+    {
+      "path": "/data/wow/mount/6",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "creature_displays",
+        "description",
+        "source",
+        "faction",
+        "requirements"
+      ]
+    },
+    {
+      "path": "/data/wow/playable-class/3",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "gender_name",
+        "power_type",
+        "specializations",
+        "media",
+        "pvp_talent_slots",
+        "playable_races"
+      ]
+    },
+    {
+      "path": "/data/wow/playable-specialization/253",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "playable_class",
+        "name",
+        "gender_description",
+        "media",
+        "role",
+        "pvp_talents",
+        "spec_talent_tree",
+        "power_type",
+        "primary_stat_type",
+        "hero_talent_trees"
+      ]
+    },
+    {
+      "path": "/data/wow/mount/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "mounts"
+      ]
+    },
+    {
+      "path": "/data/wow/mount/221",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "creature_displays",
+        "description",
+        "source",
+        "requirements"
+      ]
+    },
+    {
+      "path": "/data/wow/pet-ability/110",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "battle_pet_type",
+        "rounds",
+        "media"
+      ]
+    },
+    {
+      "path": "/data/wow/pet/39",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "battle_pet_type",
+        "description",
+        "is_capturable",
+        "is_tradable",
+        "is_battlepet",
+        "is_alliance_only",
+        "is_horde_only",
+        "abilities",
+        "source",
+        "icon",
+        "creature",
+        "is_random_creature_display",
+        "media"
+      ]
+    },
+    {
+      "path": "/data/wow/creature-family/1",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "specialization",
+        "media"
+      ]
+    },
+    {
+      "path": "/data/wow/creature-family/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "creature_families"
+      ]
+    },
+    {
+      "path": "/data/wow/creature/1",
+      "status": 404,
+      "fields": [
+        "code",
+        "type",
+        "detail"
+      ]
+    },
+    {
+      "path": "/data/wow/talent-tree/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "spec_talent_trees",
+        "class_talent_trees",
+        "hero_talent_trees"
+      ]
+    },
+    {
+      "path": "/data/wow/journal-expansion/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "tiers"
+      ]
+    },
+    {
+      "path": "/data/wow/pvp-talent/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "pvp_talents"
+      ]
+    },
+    {
+      "path": "/data/wow/talent/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "talents"
+      ]
+    },
+    {
+      "path": "/data/wow/covenant/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "covenants"
+      ]
+    },
+    {
+      "path": "/data/wow/journal-instance/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "instances"
+      ]
+    },
+    {
+      "path": "/data/wow/journal-encounter/477",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "description",
+        "creatures",
+        "items",
+        "sections",
+        "instance",
+        "category",
+        "modes"
+      ]
+    },
+    {
+      "path": "/data/wow/playable-specialization/74",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "playable_class",
+        "name",
+        "gender_description",
+        "media",
+        "role",
+        "power_type",
+        "primary_stat_type"
+      ]
+    },
+    {
+      "path": "/data/wow/journal-instance/63",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "map",
+        "area",
+        "description",
+        "encounters",
+        "expansion",
+        "location",
+        "modes",
+        "media",
+        "minimum_level",
+        "category",
+        "order_index"
+      ]
+    },
+    {
+      "path": "/data/wow/profession/202",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "description",
+        "type",
+        "media",
+        "skill_tiers"
+      ]
+    },
+    {
+      "path": "/data/wow/talent-tree/774/playable-specialization/253",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "playable_class",
+        "playable_specialization",
+        "name",
+        "media",
+        "restriction_lines",
+        "class_talent_nodes",
+        "spec_talent_nodes",
+        "hero_talent_trees"
+      ]
+    },
+    {
+      "path": "/data/wow/quest/2606",
+      "status": 404,
+      "fields": [
+        "code",
+        "type",
+        "detail"
+      ]
+    },
+    {
+      "path": "/data/wow/decor/80",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "items",
+        "name",
+        "dye_slots",
+        "default_collection_count"
+      ]
+    },
+    {
+      "path": "/data/wow/creature/2671",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "type",
+        "creature_displays",
+        "is_tameable"
+      ]
+    },
+    {
+      "path": "/data/wow/toy/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "toys"
+      ]
+    },
+    {
+      "path": "/data/wow/decor/index",
+      "status": 200,
+      "fields": [
+        "_links",
+        "decor_items"
+      ]
+    },
+    {
+      "path": "/data/wow/talent-tree/774/hero-talent/44",
+      "status": 404,
+      "fields": [
+        "unparsedBodyLength"
+      ]
+    },
+    {
+      "path": "/data/wow/talent-tree/774/hero-talent/43",
+      "status": 404,
+      "fields": [
+        "unparsedBodyLength"
+      ]
+    },
+    {
+      "path": "/data/wow/search/mount?requirements.classes.id=6&_pageSize=3",
+      "status": 200,
+      "fields": [
+        "page",
+        "pageSize",
+        "maxPageSize",
+        "pageCount",
+        "results"
+      ]
+    },
+    {
+      "path": "/data/wow/search/mount?faction.type=ALLIANCE&_pageSize=3",
+      "status": 200,
+      "fields": [
+        "page",
+        "pageSize",
+        "maxPageSize",
+        "pageCount",
+        "results"
+      ]
+    },
+    {
+      "path": "/data/wow/search/creature?name.en_US=Wolf&_pageSize=3",
+      "status": 200,
+      "fields": [
+        "page",
+        "pageSize",
+        "maxPageSize",
+        "pageCount",
+        "results"
+      ]
+    },
+    {
+      "path": "/data/wow/creature/42002",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "type",
+        "family",
+        "creature_displays",
+        "is_tameable"
+      ]
+    },
+    {
+      "path": "/data/wow/item/13245",
+      "status": 200,
+      "fields": [
+        "_links",
+        "id",
+        "name",
+        "quality",
+        "level",
+        "required_level",
+        "media",
+        "item_class",
+        "item_subclass",
+        "inventory_type",
+        "purchase_price",
+        "sell_price",
+        "max_count",
+        "is_equippable",
+        "is_stackable",
+        "preview_item",
+        "purchase_quantity",
+        "appearances"
+      ]
+    },
+    {
+      "path": "/data/wow/search/mount?id=221&_pageSize=3",
+      "status": 200,
+      "fields": [
+        "page",
+        "pageSize",
+        "maxPageSize",
+        "pageCount",
+        "results"
+      ]
+    },
+    {
+      "path": "/data/wow/search/creature?is_tameable=true&family.id=1&_pageSize=3",
+      "status": 200,
+      "fields": [
+        "page",
+        "pageSize",
+        "maxPageSize",
+        "pageCount",
+        "results"
+      ]
+    }
+  ]
+}

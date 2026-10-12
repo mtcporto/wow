@@ -5,7 +5,9 @@
   "scripts": {
     "test": "node --test tests/*.test.cjs",
     "dev": "node server/local.cjs",
-    "catalogue:update": "node --env-file=.env.local scripts/update-pet-catalogue.cjs"
+    "catalogue:update": "node --env-file=.env.local scripts/update-pet-catalogue.cjs",
+    "mounts:update": "node --env-file=.env.local scripts/update-class-mounts.cjs",
+    "media:update": "python3 scripts/update-media-catalogue.py"
   },
   "engines": {
     "node": "24.x"

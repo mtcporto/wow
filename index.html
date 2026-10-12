@@ -19,7 +19,7 @@
       position: relative;
       min-height: 100vh;
     }
-    
+
     body::before {
       content: '';
       position: absolute;
@@ -30,7 +30,7 @@
       background: rgba(0, 0, 0, 0.7);
       z-index: -1;
     }
-    
+
     .container {
       max-width: 900px;
       margin: 0 auto;
@@ -38,7 +38,7 @@
       position: relative;
       z-index: 1;
     }
-    
+
     h1 {
       font-family: 'Cinzel', serif;
       color: #ffc000;
@@ -50,13 +50,13 @@
       border-bottom: 2px solid #825b00;
       padding-bottom: 15px;
     }
-    
+
     .class-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
     }
-    
+
     .class-card {
       border: 2px solid #825b00;
       border-radius: 8px;
@@ -67,12 +67,12 @@
       transition: transform 0.2s, box-shadow 0.2s;
       overflow: hidden;
     }
-    
+
     .class-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
     }
-    
+
     .class-card strong {
       font-family: 'Cinzel', serif;
       color: #ffc000;
@@ -81,20 +81,20 @@
       margin-bottom: 10px;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     }
-    
+
     .class-card img {
       width: 64px;
       height: 64px;
       margin-bottom: 10px;
     }
-    
+
     .class-desc {
       font-size: 0.85em;
       color: #d4d4d4;
       margin-top: 8px;
       line-height: 1.4;
     }
-    
+
     .loading {
       text-align: center;
       padding: 40px;
@@ -103,7 +103,7 @@
       font-size: 1.5em;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     }
-    
+
     .error {
       background: rgba(139, 0, 0, 0.7);
       border: 1px solid #ff0000;
@@ -114,7 +114,7 @@
       margin: 20px auto;
       max-width: 80%;
     }
-    
+
     .api-warning {
       background: rgba(139, 0, 0, 0.7);
       border: 1px solid #ff0000;
@@ -126,16 +126,16 @@
       max-width: 80%;
       font-size: 0.9em;
     }
-    
+
     .api-warning a {
       color: #ffc000;
       text-decoration: none;
     }
-    
+
     .api-warning a:hover {
       text-decoration: underline;
     }
-    
+
     .controls {
       display: flex;
       justify-content: center;
@@ -144,14 +144,14 @@
       gap: 15px;
       flex-wrap: wrap;
     }
-    
+
     .language-selector {
       display: flex;
       border: 1px solid #825b00;
       border-radius: 5px;
       overflow: hidden;
     }
-    
+
     .language-btn {
       background-color: #3a2e25;
       border: none;
@@ -161,16 +161,16 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       transition: background-color 0.2s;
     }
-    
+
     .language-btn:hover {
       background-color: #4d3e33;
     }
-    
+
     .language-btn.active {
       background-color: #825b00;
       color: #fff;
     }
-    
+
     .feature-selector {
       display: flex;
       flex-direction: column;
@@ -180,7 +180,7 @@
       border-radius: 8px;
       padding: 15px;
     }
-    
+
     .feature-selector h3 {
       font-family: 'Cinzel', serif;
       color: #ffc000;
@@ -189,14 +189,14 @@
       font-size: 1.2em;
       text-align: center;
     }
-    
+
     .feature-btn-group {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
     }
-    
+
     .feature-btn {
       background: linear-gradient(to bottom, #825b00, #5d4000);
       border: none;
@@ -208,19 +208,19 @@
       transition: background-color 0.2s;
       font-size: 0.9em;
     }
-    
+
     .feature-btn:hover {
       background: linear-gradient(to bottom, #a67300, #825b00);
     }
-    
+
     .hidden {
       display: none;
     }
-    
+
     .feature-category {
       margin-bottom: 15px;
     }
-    
+
     .category-title {
       color: #ffc000;
       font-family: 'Cinzel', serif;
@@ -233,8 +233,9 @@
 </head>
 <body>
   <div class="container">
-    <header class="site-header"><a class="site-brand" href="index.html"><span class="brand-symbol" aria-hidden="true">W</span><span>Azeroth<span class="brand-caption">EXPLORER</span></span></a><nav aria-label="Catálogo"><a href="index.html" aria-current="page" data-nav="classes">Classes</a><a href="pets.html"  data-nav="pets">Mascotes</a></nav></header>
+    <header class="site-header"><a class="site-brand" href="index.html"><span class="brand-symbol" aria-hidden="true">W</span><span>Azeroth<span class="brand-caption">EXPLORER</span></span></a><nav aria-label="Catálogo"><a href="index.html" aria-current="page" data-nav="classes">Classes</a><a href="pets.html"  data-nav="pets">Mascotes</a><a href="explore.html?mounts=1" data-nav="mounts">Montarias</a><a href="explore.html?journal=1" data-nav="journal">Journal</a><a href="explore.html?professions=1" data-nav="professions">Professions</a><a href="explore.html?transmog=1" data-nav="transmog">Transmog</a><a href="explore.html?housing=decor" data-nav="housing">Housing</a><a href="explore.html?achievements=1" data-nav="achievements">Achievements</a><a href="explore.html?realms=1" data-nav="realms">Realms</a><a href="explore.html?media=all" data-nav="media">Media</a></nav></header>
     <main id="main-content">
+    <img class="expansion-logo" src="assets/wow-midnight.webp" alt="World of Warcraft: Midnight" width="180" height="150">
     <p class="hero-kicker">WORLD OF WARCRAFT</p>
     <h1 id="page-title">Playable Classes (WoW)</h1>
     <p class="intro" id="catalogue-intro"></p>
@@ -245,51 +246,38 @@
       </div>
     </div>
     <div id="output" class="loading" aria-live="polite" aria-busy="true">Loading...</div>
-    
+
     <div class="feature-selector hidden" id="feature-selector">
-      <details><summary data-upcoming>Outros recursos · em desenvolvimento</summary>
-      <h3 id="feature-title">More WoW API Features</h3>
-      
+
+      <h3 id="feature-title">Explore Azeroth</h3>
+      <p class="explorer-note" id="feature-description">Choose a path. Class-related content starts with your class.</p>
+
       <div class="feature-category">
         <div class="category-title" id="character-title">Character</div>
         <div class="feature-btn-group">
-          <button class="feature-btn" data-feature="specializations">Specializations</button>
-          <button class="feature-btn" data-feature="talents">Talents</button>
-          <button class="feature-btn" data-feature="pvp-talents">PvP Talents</button>
-          <button class="feature-btn" data-feature="achievements">Achievements</button>
+          <a class="feature-btn" data-feature="achievements" href="explore.html?achievements=1">Achievements</a>
+          <a class="feature-btn" data-feature="specializations" href="explore.html?browse=specializations">Specializations</a>
+          <a class="feature-btn" data-feature="talents" href="explore.html?browse=talents">Talents</a>
+          <a class="feature-btn" data-feature="pvp-talents" href="explore.html?browse=pvp-talents">PvP Talents</a>
         </div>
       </div>
-      
+
       <div class="feature-category">
         <div class="category-title" id="game-data-title">Game Data</div>
         <div class="feature-btn-group">
-          <button class="feature-btn" data-feature="races">Playable Races</button>
-          <button class="feature-btn" data-feature="items">Items</button>
-          <button class="feature-btn" data-feature="mounts">Mounts</button>
+          <a class="feature-btn" data-feature="races" href="explore.html?browse=races">Playable Races</a>
+          <a class="feature-btn" data-feature="transmog" href="explore.html?transmog=1">Appearance sets</a>
+          <a class="feature-btn" data-feature="mounts-all" href="explore.html?mounts=1">Mounts</a>
+          <a class="feature-btn" data-feature="mounts" href="explore.html?browse=mounts">Class mounts</a>
           <a class="feature-btn" data-feature="pets" href="pets.html">Pets</a>
+          <a class="feature-btn" data-feature="hunter-pets" href="explore.html?hunters=1">Hunter pets</a>
         </div>
       </div>
-      
-      <div class="feature-category">
-        <div class="category-title" id="world-title">World</div>
-        <div class="feature-btn-group">
-          <button class="feature-btn" data-feature="realms">Realms</button>
-          <button class="feature-btn" data-feature="regions">Regions</button>
-          <button class="feature-btn" data-feature="dungeons">Dungeons</button>
-          <button class="feature-btn" data-feature="raids">Raids</button>
-        </div>
-      </div>
-      
-      <div class="feature-category">
-        <div class="category-title" id="media-title">Media</div>
-        <div class="feature-btn-group">
-          <button class="feature-btn" data-feature="class-media">Class Images</button>
-          <button class="feature-btn" data-feature="wallpapers">Wallpapers</button>
-          <button class="feature-btn" data-feature="cinematics">Cinematics</button>
-          <button class="feature-btn" data-feature="screenshots">Screenshots</button>
-        </div>
-      </div>
-      </details>
+
+      <div class="feature-category"><div class="category-title" id="world-title">World</div><div class="feature-btn-group"><a class="feature-btn" data-feature="realms" href="explore.html?realms=1">Realms</a><a class="feature-btn" data-feature="regions" href="explore.html?regions=1">Regions</a><a class="feature-btn" href="explore.html?journal=1">Journal</a><a class="feature-btn" data-feature="dungeons" href="explore.html?journal=1&amp;kind=dungeons">Dungeons</a><a class="feature-btn" data-feature="raids" href="explore.html?journal=1&amp;kind=raids">Raids</a></div></div>
+      <div class="feature-category"><div class="category-title" id="crafting-title">Crafting</div><div class="feature-btn-group"><a class="feature-btn" data-feature="professions" href="explore.html?professions=1">Professions and recipes</a></div></div>
+      <div class="feature-category"><div class="category-title" id="housing-title">Housing</div><div class="feature-btn-group"><a class="feature-btn" data-feature="housing" href="explore.html?housing=decor">Housing and decor</a><a class="feature-btn" data-feature="rooms" href="explore.html?housing=rooms">Rooms</a><a class="feature-btn" data-feature="fixtures" href="explore.html?housing=fixtures">Fixtures</a></div></div>
+      <div class="feature-category"><div class="category-title" id="media-title">Media</div><div class="feature-btn-group"><a class="feature-btn" data-feature="official-media" href="explore.html?media=all">Official gallery</a><a class="feature-btn" data-feature="videos" href="explore.html?media=video">Videos and cinematics</a><a class="feature-btn" data-feature="comics" href="explore.html?media=comic">Comics</a><a class="feature-btn" data-feature="stories" href="explore.html?media=short-story">Short stories</a><a class="feature-btn" data-feature="audio" href="explore.html?media=audio">Audio</a></div></div>
     </div>
     </main>
     <footer class="site-footer">Azeroth Explorer <span>Dados da Blizzard · Projeto independente de fãs</span></footer>
@@ -297,10 +285,10 @@
 
   <script>
     // Your Blizzard API credentials - remain the same
-    
+
     // Default language and getting language from sessionStorage if available
     let currentLanguage = sessionStorage.getItem("wow-language") || "en_US";
-    
+
     // Text translations object
     const translations = {
       "page-title": {
@@ -324,22 +312,22 @@
         "pt_BR": "Verifique as credenciais da API da Blizzard"
       }
     };
-    
+
     // Get translated text
     function getTranslation(key) {
       return translations[key][currentLanguage] || translations[key]["en_US"];
     }
-    
+
     // Update all page text based on selected language
     function updatePageText() {
       document.getElementById("page-title").textContent = getTranslation("page-title");
-      
+
       const output = document.getElementById("output");
       if (output.className === "loading") {
         output.textContent = getTranslation("loading");
       }
     }
-    
+
     // Update language button UI
     function updateLanguageButtons() {
       document.getElementById("lang-en").classList.toggle("active", currentLanguage === "en_US");
@@ -347,36 +335,53 @@
       updateFeatureText();
       updatePageText();
     }
-    
+
     // Update feature section text based on language
     function updateFeatureText() {
       const isPortuguese = currentLanguage === "pt_BR";
-      
-      document.getElementById("feature-title").textContent = isPortuguese ? 
-        "Mais recursos da API do WoW" : "More WoW API Features";
-      
+
+      document.getElementById("feature-title").textContent = isPortuguese ?
+        "Explore Azeroth" : "Explore Azeroth";
+
       document.getElementById("character-title").textContent = isPortuguese ?
-        "Personagem" : "Character";
-        
+        "Classes e especializações" : "Classes and specializations";
+
       document.getElementById("game-data-title").textContent = isPortuguese ?
-        "Dados do Jogo" : "Game Data";
-        
+        "Coleções e companheiros" : "Collections and companions";
+
       document.getElementById("world-title").textContent = isPortuguese ?
         "Mundo" : "World";
-        
+
       document.getElementById("media-title").textContent = isPortuguese ?
         "Mídia" : "Media";
-        
+
+      document.getElementById('feature-description').textContent = isPortuguese
+        ? 'Explore classes e coleções, ou siga pelo Journal até chefes e recompensas.'
+        : 'Explore classes and collections, or follow the Journal to bosses and rewards.';
+      document.getElementById('crafting-title').textContent = isPortuguese ? 'Profissões e criação' : 'Professions and crafting';
+      document.getElementById('housing-title').textContent = isPortuguese ? 'Casas e decoração' : 'Housing';
       // Update button text based on language
       const buttonTranslations = {
+        "official-media": isPortuguese ? "Galeria oficial" : "Official gallery",
+        "videos": isPortuguese ? "Vídeos e cinemáticas" : "Videos and cinematics",
+        "comics": isPortuguese ? "Quadrinhos" : "Comics",
+        "stories": isPortuguese ? "Contos" : "Short stories",
+        "audio": isPortuguese ? "Áudio" : "Audio",
+        "housing": isPortuguese ? "Decoração" : "Decor",
+        "rooms": isPortuguese ? "Ambientes" : "Rooms",
+        "fixtures": isPortuguese ? "Estruturas" : "Fixtures",
+        "transmog": isPortuguese ? "Conjuntos de transmog" : "Transmog sets",
+        "professions": isPortuguese ? "Profissões e receitas" : "Professions and recipes",
         "specializations": isPortuguese ? "Especializações" : "Specializations",
         "talents": isPortuguese ? "Talentos" : "Talents",
         "pvp-talents": isPortuguese ? "Talentos JvJ" : "PvP Talents",
         "achievements": isPortuguese ? "Conquistas" : "Achievements",
-        "races": isPortuguese ? "Raças Jogáveis" : "Playable Races",
-        "items": isPortuguese ? "Itens" : "Items",
-        "mounts": isPortuguese ? "Montarias" : "Mounts",
-        "pets": isPortuguese ? "Mascotes" : "Pets",
+        "races": isPortuguese ? "Raças por classe" : "Races by class",
+
+        "mounts-all": isPortuguese ? "Montarias" : "Mounts",
+        "mounts": isPortuguese ? "Montarias de classe" : "Class mounts",
+        "hunter-pets": isPortuguese ? "Companheiros de Hunter" : "Hunter companions",
+        "pets": isPortuguese ? "Mascotes de batalha" : "Battle pets",
         "realms": isPortuguese ? "Reinos" : "Realms",
         "regions": isPortuguese ? "Regiões" : "Regions",
         "dungeons": isPortuguese ? "Masmorras" : "Dungeons",
@@ -386,7 +391,7 @@
         "cinematics": isPortuguese ? "Cinemáticas" : "Cinematics",
         "screenshots": isPortuguese ? "Capturas de Tela" : "Screenshots"
       };
-      
+
       document.querySelectorAll('.feature-btn').forEach(button => {
         const featureKey = button.dataset.feature;
         if (buttonTranslations[featureKey]) {
@@ -394,7 +399,7 @@
         }
       });
     }
-    
+
     // Initialize language buttons
     document.getElementById("lang-en").addEventListener("click", () => {
       currentLanguage = "en_US";
@@ -402,17 +407,17 @@
       updateLanguageButtons();
       showClasses(); // Reload with new language
     });
-    
+
     document.getElementById("lang-pt").addEventListener("click", () => {
       currentLanguage = "pt_BR";
       sessionStorage.setItem("wow-language", currentLanguage);
       updateLanguageButtons();
       showClasses(); // Reload with new language
     });
-    
+
     // Set initial button and text states
     updateLanguageButtons();
-    
+
     // Class icon mapping - used to add icons to API data
     const classIconMap = {
       1: "warrior",
@@ -429,8 +434,8 @@
       12: "demonhunter",
       13: "evoker"
     };
-    
-    // Class description mapping - English 
+
+    // Class description mapping - English
     const classDescriptionsEn = {
       1: "A master of melee combat, using plate armor and various weapons.",
       2: "A holy defender who uses Light magic to heal and protect allies.",
@@ -446,7 +451,7 @@
       12: "An agile hunter who uses demonic powers against enemies.",
       13: "A draconic guardian who manipulates draconic magic to protect and destroy."
     };
-    
+
     // Class description mapping - Portuguese
     const classDescriptionsPt = {
       1: "Um mestre em combate corpo a corpo, utilizando placas e diversas armas.",
@@ -468,7 +473,7 @@
     function getCachedData(key) {
       const stored = sessionStorage.getItem(key);
       if (!stored) return null;
-      
+
       try {
         const { timestamp, data } = JSON.parse(stored);
         // Cache expires after 30 minutes
@@ -480,7 +485,7 @@
       }
       return null;
     }
-    
+
     // Save data to cache
     function setCachedData(key, data) {
       try {
@@ -506,18 +511,18 @@
     async function fetchPlayableClasses(token) {
       const cacheKey = `wow-classes-${currentLanguage}`;
       const cachedData = getCachedData(cacheKey);
-      
+
       if (cachedData) {
         return cachedData;
       }
-      
+
       try {
         const res = await blizzardFetch(`https://us.api.blizzard.com/data/wow/playable-class/index?namespace=static-us&locale=${currentLanguage}`);
-        
+
         if (!res.ok) {
           throw new Error(`Falha na API (${res.status}: ${res.statusText})`);
         }
-        
+
         const data = await res.json();
         setCachedData(cacheKey, data);
         return data;
@@ -530,42 +535,43 @@
     async function showClasses() {
       const container = document.getElementById("output");
       const featureSelector = document.getElementById("feature-selector");
-      
+
       try {
         container.className = "loading";
         container.textContent = getTranslation("summoning");
-        
+
         // Hide feature selector while loading
         featureSelector.classList.add("hidden");
-        
+
         const token = await getAccessToken();
         const data = await fetchPlayableClasses(token);
-        
+
         container.className = "class-grid";
         container.innerHTML = "";
 
         data.classes.forEach(cl => {
-          const div = document.createElement("div");
+          const div = document.createElement("a");
           div.className = "class-card";
           div.dataset.classId = cl.id;
-          
+          div.href = "explore.html?class=" + cl.id;
+
           let html = `<strong>${cl.name}</strong>`;
-          
+
           // Add icon
           const iconUrl = `https://render.worldofwarcraft.com/us/icons/56/classicon_${classIconMap[cl.id]}.jpg`;
           html += `<img src="${iconUrl}" alt="${cl.name}">`;
-          
+
           // Add description based on language
           const descriptions = currentLanguage === "pt_BR" ? classDescriptionsPt : classDescriptionsEn;
           html += `<p class="class-desc">${descriptions[cl.id]}</p>`;
-          
+
           div.innerHTML = html;
           container.appendChild(div);
         });
-        
+
         // Show feature selector after successful load
         featureSelector.classList.remove("hidden");
-        
+
       } catch (err) {
         container.className = "error";
         container.innerHTML = `
@@ -575,18 +581,6 @@
         console.error(err);
       }
     }
-
-    // Initialize feature buttons
-    document.querySelectorAll('button.feature-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        const feature = button.dataset.feature;
-        
-        // Example message for additional features (would be replaced with actual implementations)
-        alert(currentLanguage === "pt_BR" ? 
-          `Recurso "${button.textContent}" em desenvolvimento. Este recurso permitirá visualizar detalhes adicionais do WoW.` :
-          `Feature "${button.textContent}" under development. This feature will allow you to view additional WoW details.`);
-      });
-    });
 
     // Start the application
     showClasses();

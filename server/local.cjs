@@ -13,9 +13,9 @@ function createLocalServer({env=process.env}={}) {
       return proxy(req,res);
     }
     if(req.method!=='GET'){res.writeHead(405);return res.end();}
-    const file={'/':'index.html','/index.html':'index.html','/pets.html':'pets.html','/catalogue.css':'catalogue.css','/catalogue.js':'catalogue.js','/data/pets.json':'data/pets.json'}[url.pathname];
+    const file={'/':'index.html','/index.html':'index.html','/pets.html':'pets.html','/catalogue.css':'catalogue.css','/catalogue.js':'catalogue.js','/data/pets.json':'data/pets.json','/data/class-mounts.json':'data/class-mounts.json','/data/mounts.json':'data/mounts.json','/data/media.json':'data/media.json','/explore.html':'explore.html','/explorer.js':'explorer.js','/explorer-data.js':'explorer-data.js','/talent-tree.js':'talent-tree.js','/assets/wow-midnight.webp':'assets/wow-midnight.webp'}[url.pathname];
     if(!file){res.writeHead(404);return res.end();}
-    res.setHeader('Content-Type',file.endsWith('.json')?'application/json; charset=utf-8':file.endsWith('.css')?'text/css; charset=utf-8':file.endsWith('.js')?'text/javascript; charset=utf-8':'text/html; charset=utf-8');
+    res.setHeader('Content-Type',file.endsWith('.webp')?'image/webp':file.endsWith('.json')?'application/json; charset=utf-8':file.endsWith('.css')?'text/css; charset=utf-8':file.endsWith('.js')?'text/javascript; charset=utf-8':'text/html; charset=utf-8');
     res.end(fs.readFileSync(path.join(__dirname,'..',file)));
   });
 }

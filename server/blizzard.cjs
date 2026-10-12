@@ -1,4 +1,4 @@
-const PATH = /^\/data\/wow\/(?:playable-class\/index|pet\/index|(?:pet|media\/pet|item|creature)\/[1-9]\d{0,8})$/;
+const PATH = /^\/data\/wow\/(?:playable-class\/(?:index|[1-9]\d{0,8})|playable-specialization\/[1-9]\d{0,8}|playable-race\/[1-9]\d{0,8}|creature-family\/(?:index|[1-9]\d{0,8})|mount\/(?:index|[1-9]\d{0,8})|pet\/index|realm\/[a-z0-9]+(?:-[a-z0-9]+)*|(?:region|connected-realm)\/(?:index|[1-9]\d{0,8})|achievement(?:-category)?\/(?:index|[1-9]\d{0,8})|(?:decor|fixture|fixture-hook|room)\/(?:index|[1-9]\d{0,8})|item-appearance\/(?:[1-9]\d{0,8}|set\/(?:index|[1-9]\d{0,8})|slot\/index)|profession\/(?:index|[1-9]\d{0,8}(?:\/skill-tier\/[1-9]\d{0,8})?)|recipe\/[1-9]\d{0,8}|journal-(?:expansion|instance)\/(?:index|[1-9]\d{0,8})|journal-encounter\/[1-9]\d{0,8}|talent-tree\/[1-9]\d{0,8}\/playable-specialization\/[1-9]\d{0,8}|media\/(?:playable-class|playable-specialization|creature-family|creature-display|journal-instance|item|profession|recipe|achievement)\/[1-9]\d{0,8}|search\/creature|(?:pet|media\/pet|item|creature)\/[1-9]\d{0,8})$/;
 const LOCALES = new Set(['en_US','en_GB','pt_BR','es_MX','es_ES','fr_FR','de_DE','it_IT','ru_RU','ko_KR','zh_CN','zh_TW']);
 function cleanData(value, token) {
   if (Array.isArray(value)) return value.map(item => cleanData(item, token));
@@ -27,16 +27,29 @@ function createHandler({env = process.env, fetchImpl = global.fetch} = {}) {
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('X-Content-Type-Options','nosniff');
     if (req.method !== 'GET') {res.setHeader('Allow','GET'); return res.status(405).json({error:'method_not_allowed'});}
-    const {path, locale = 'en_US'} = req.query || {};
+    const {path, locale = 'en_US', region = 'us'} = req.query || {};
     if (typeof path !== 'string' || !PATH.test(path) || typeof locale !== 'string' || !LOCALES.has(locale)) return res.status(400).json({error:'invalid_resource'});
+    if (typeof region !== 'string' || !['us','eu','kr','tw'].includes(region)) return res.status(400).json({error:'invalid_resource'});
+    if (path === '/data/wow/search/creature') {
+      const {family, page = '1'} = req.query;
+      if (typeof family !== 'string' || !/^[1-9]\d{0,8}$/.test(family) || typeof page !== 'string' || !/^[1-9]\d{0,4}$/.test(page)) return res.status(400).json({error:'invalid_resource'});
+    }
     if (!env.BLIZZARD_CLIENT_ID || !env.BLIZZARD_CLIENT_SECRET) return res.status(503).json({error:'blizzard_not_configured'});
     try {
       const bearer = await accessToken();
-      const url = new URL(path,'https://us.api.blizzard.com');url.searchParams.set('namespace','static-us');url.searchParams.set('locale',locale);
+      const dynamic = /^\/data\/wow\/(?:realm|region|connected-realm)\//.test(path);
+      const url = new URL(path,'https://'+region+'.api.blizzard.com');url.searchParams.set('namespace',(dynamic?'dynamic-':'static-')+region);url.searchParams.set('locale',locale);
+      if (path === '/data/wow/search/creature') {
+        url.searchParams.set('is_tameable','true');
+        url.searchParams.set('family.id',req.query.family);
+        url.searchParams.set('_page',req.query.page || '1');
+        url.searchParams.set('_pageSize','24');
+        url.searchParams.set('orderby','id');
+      }
       const result = await fetchImpl(url, {headers: {Authorization:`Bearer ${bearer}`,Accept:'application/json'}, signal:AbortSignal.timeout(15000),redirect:'error'});
       if (!result.ok) {if(result.status===401){token=null;expires=0;} return res.status(result.status===404 ? 404 : 502).json({error: result.status===404 ? 'resource_not_found' : 'blizzard_unavailable'});}
       const data = cleanData(await result.json(),bearer);
-      res.setHeader('Cache-Control','public, s-maxage=300, stale-while-revalidate=600');
+      res.setHeader('Cache-Control',dynamic?'public, s-maxage=60, stale-while-revalidate=120':'public, s-maxage=300, stale-while-revalidate=600');
       return res.status(200).json(data);
     } catch {return res.status(502).json({error:'blizzard_unavailable'});}
   };
