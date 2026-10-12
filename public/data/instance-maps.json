@@ -1,0 +1,65 @@
+{
+  "instances": {
+    "746": {
+      "name": {
+        "en_US": "Gruul's Lair",
+        "pt_BR": "Covil de Gruul"
+      },
+      "floors": [
+        {
+          "uiMapId": 330,
+          "name": {
+            "en_US": "Gruul's Lair",
+            "pt_BR": "Covil de Gruul"
+          },
+          "image": "/assets/maps/uimap-330.webp",
+          "width": 1002,
+          "height": 668,
+          "pins": [
+            {
+              "encounterId": 1564,
+              "name": {
+                "en_US": "High King Maulgar",
+                "pt_BR": "Alto-rei Maulgar"
+              },
+              "x": 0.55025500059,
+              "y": 0.57076901197,
+              "order": 1
+            },
+            {
+              "encounterId": 1565,
+              "name": {
+                "en_US": "Gruul the Dragonkiller",
+                "pt_BR": "Gruul, o Matador de Dragões"
+              },
+              "x": 0.19948600233,
+              "y": 0.28307700157,
+              "order": 2
+            }
+          ],
+          "artId": 342,
+          "fileDataIds": [
+            515307,
+            515311,
+            515312,
+            515313,
+            515314,
+            515315,
+            515316,
+            515317,
+            515318,
+            515308,
+            515309,
+            515310
+          ]
+        }
+      ],
+      "source": {
+        "provider": "Wago.tools DB2/CASC",
+        "retrievedAt": "2026-10-12T16:48:30.863673+00:00",
+        "requestedBuild": null,
+        "url": "https://wago.tools/db2/JournalEncounter"
+      }
+    }
+  }
+}

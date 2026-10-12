@@ -35,11 +35,10 @@ test('reuses a warm-instance token without exposing it and handles concurrent re
  }});
  await Promise.all([1,2].map(async id=>handler({method:'GET',query:{path:'/data/wow/pet/'+id}},response())));assert.equal(auth,1);
 });
-test('HTML scripts remain valid and no longer authenticate with Blizzard in the browser',()=>{
+test('browser modules are valid and never authenticate with Blizzard directly',()=>{
  const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
- for(const file of ['index.html','pets.html']){
-  const html=fs.readFileSync(path.join(__dirname,'..',file),'utf8');assert(!html.includes('oauth.battle.net/token'));assert(!html.includes('clientSecret'));assert(html.includes('/api/blizzard?path='));
-  for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi))if(!/\bsrc=/.test(match[1]))new vm.Script(match[2],{filename:file});
+ for(const file of ['pets.js','explorer.js','explorer-data.js','talent-tree.js','wow-tooltip.js','catalogue.js']){
+  const script=fs.readFileSync(path.join(__dirname,'../public/legacy',file),'utf8');assert(!script.includes('oauth.battle.net/token'));assert(!script.includes('clientSecret'));new vm.Script(script,{filename:file});
  }
 });
 test('hunter search fixes tameability and accepts only numeric family and page filters',async()=>{
@@ -55,11 +54,11 @@ test('hunter search fixes tameability and accepts only numeric family and page f
 });
 test('allows explorer resources while rejecting malformed talent paths and arbitrary search APIs',async()=>{
  let calls=0;const handler=createHandler({env,fetchImpl:async url=>{calls++;return String(url).includes('oauth.battle.net')?Response.json({access_token:'synthetic-provider-token',expires_in:3600}):Response.json({id:3});}});
- for(const resource of ['playable-class/3','playable-specialization/253','playable-race/1','creature-family/index','mount/221','talent-tree/774/playable-specialization/253','media/creature-display/161','journal-expansion/index','journal-expansion/68','journal-instance/63','journal-encounter/477','media/journal-instance/63','media/item/13245','profession/index','profession/164','profession/164/skill-tier/2477','recipe/1631','media/profession/164','media/recipe/1631','item-appearance/set/index','item-appearance/set/13','item-appearance/321','decor/index','decor/80','fixture/141','fixture-hook/2503','room/1','achievement/index','achievement/6','achievement-category/index','achievement-category/81','media/achievement/6']){
+ for(const resource of ['spell/206930','media/spell/206930','playable-class/3','playable-specialization/253','playable-race/1','creature-family/index','mount/221','talent-tree/774/playable-specialization/253','media/creature-display/161','journal-expansion/index','journal-expansion/68','journal-instance/63','journal-encounter/477','media/journal-instance/63','media/item/13245','profession/index','profession/164','profession/164/skill-tier/2477','recipe/1631','media/profession/164','media/recipe/1631','item-appearance/set/index','item-appearance/set/13','item-appearance/321','decor/index','decor/80','fixture/141','fixture-hook/2503','room/1','achievement/index','achievement/6','achievement-category/index','achievement-category/81','media/achievement/6']){
   const res=response();await handler({method:'GET',query:{path:'/data/wow/'+resource}},res);assert.equal(res.code,200);
  }
  const before=calls;
- for(const resource of ['talent-tree/774/playable-specialization/../../oauth','search/mount','profession/164/skill-tier/1/../../oauth','recipe/0','item-appearance/set/13/../../oauth','item-appearance/set/0','decor/0','achievement-category/81/../../oauth','achievement/0','fixture-hook/2503/../../oauth','room/index?url=https://evil.test','playable-class/0','media/creature-display/1?url=https://evil.test']){
+ for(const resource of ['spell/0','spell/1/../../oauth','media/spell/0','talent-tree/774/playable-specialization/../../oauth','search/mount','profession/164/skill-tier/1/../../oauth','recipe/0','item-appearance/set/13/../../oauth','item-appearance/set/0','decor/0','achievement-category/81/../../oauth','achievement/0','fixture-hook/2503/../../oauth','room/index?url=https://evil.test','playable-class/0','media/creature-display/1?url=https://evil.test']){
   const res=response();await handler({method:'GET',query:{path:'/data/wow/'+resource}},res);assert.equal(res.code,400);
  }
  assert.equal(calls,before);

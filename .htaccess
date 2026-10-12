@@ -1,0 +1,5 @@
+# Only this project is proxied; other localhost sites remain on Apache.
+DirectorySlash Off
+RewriteEngine On
+RewriteRule ^$ http://127.0.0.1:8788/wow [P,L]
+RewriteRule ^(.+)$ http://127.0.0.1:8788/wow/$1 [P,L]

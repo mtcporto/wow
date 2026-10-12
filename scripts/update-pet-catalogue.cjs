@@ -23,7 +23,7 @@ async function request(resource) {
   }
  }));
  pets.sort((a,b)=>a.id-b.id);
- const destination=path.join(__dirname,'../data/pets.json');
+ const destination=path.join(__dirname,'../public/data/pets.json');
  await fs.writeFile(destination+'.tmp',JSON.stringify({updatedAt:new Date().toISOString(),pets}));
  await fs.rename(destination+'.tmp',destination);
  console.log('Catalogue saved: '+pets.length+' pets.');

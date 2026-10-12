@@ -1,5 +1,5 @@
 (() => {
-  const pets = location.pathname.endsWith('pets.html');
+  const pets = location.pathname.endsWith('pets') || location.pathname.endsWith('pets.html');
   function updateCopy() {
     const pt = sessionStorage.getItem('wow-language') === 'pt_BR';
     document.documentElement.lang = pt ? 'pt-BR' : 'en';
@@ -29,5 +29,6 @@
     });
   });
   observer.observe(output, {childList:true,subtree:true});
+  output.setAttribute('aria-busy', output.classList.contains('loading') ? 'true' : 'false');
   updateCopy();
 })();

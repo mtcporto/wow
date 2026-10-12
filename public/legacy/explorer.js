@@ -12,8 +12,7 @@
   const escape = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const numeric = key => /^[1-9]\d{0,8}$/.test(params.get(key)||'') ? Number(params.get(key)) : null;
   function api(resource, extra={}) {
-    const local = ['localhost','127.0.0.1'].includes(location.hostname);
-    const base = local ? 'http://127.0.0.1:8788' : location.pathname.startsWith('/wow/') ? 'https://wow-one-pi.vercel.app' : '';
+    const base = window.WowConfig.basePath;
     const query = new URLSearchParams({path:'/data/wow/'+resource,locale,...(/^(realm|region|connected-realm)\//.test(resource)?{region:worldRegion()}:{}),...extra});
     const key = query.toString();
     if (!cache.has(key)) cache.set(key, fetch(base+'/api/blizzard?'+query).then(async response=>{
@@ -27,6 +26,14 @@
   const card = (heading,body,href='') => `<${href?'a':'article'} class="relation-card"${href?` href="${escape(href)}"`:''}><h3>${escape(heading)}</h3>${body}</${href?'a':'article'}>`;
   const tag = label => `<span class="tag">${escape(label)}</span>`;
   const description = value => `<p>${escape(value)}</p>`;
+  const skillButton = (name,index) => `<button class="spell-preview-button" data-skill="${index}">${escape(name)}</button>`;
+  function bindSkills(skills) {
+    output.querySelectorAll('[data-skill]').forEach(button=>{
+      const skill=skills[Number(button.dataset.skill)];
+      const tooltip=skill.spell_tooltip;
+      WowTooltip.bind(button,()=>tooltip?ExplorerData.talentTooltip({ranks:[{tooltip:{talent:{name:skill.talent?.name||skill.spell?.name||skill.name},spell_tooltip:tooltip}}]},locale):api('spell/'+(skill.spell?.id||skill.id)).then(ExplorerData.spellTooltip));
+    });
+  }
   async function media(resource,version) {
     try { const data=await api(resource);const asset=data.assets?.find(a=>a.key==='icon')||data.assets?.[0];
       if(version!==generation||!asset||!/^https:\/\//.test(asset.value))return;
@@ -38,7 +45,7 @@
     return locale==='pt_BR'?(names[value]||value):value;
   }
   async function classView(id,version) {
-    const [data,mounts] = await Promise.all([api('playable-class/'+id),fetch('data/class-mounts.json').then(r=>{if(!r.ok)throw Error('Mount catalogue unavailable');return r.json();})]);
+    const [data,mounts] = await Promise.all([api('playable-class/'+id),fetch(window.WowConfig.basePath+'/data/class-mounts.json').then(r=>{if(!r.ok)throw Error('Mount catalogue unavailable');return r.json();})]);
     if(version!==generation)return;
     title.textContent=data.name;
     intro.textContent=text('Explore as raças, especializações e coleções ligadas a esta classe.','Explore the races, specializations and collections connected to this class.');
@@ -66,20 +73,20 @@
     let groups=[],allNodes=[];
     if(path){const resource=new URL(path).pathname.replace('/data/wow/','');const tree=await api(resource);if(version!==generation)return;
       allNodes=[...(tree.class_talent_nodes||[]),...(tree.spec_talent_nodes||[]),...(tree.hero_talent_trees||[]).flatMap(h=>h.hero_talent_nodes||[])];
-      groups=[{name:text('Classe','Class'),nodes:tree.class_talent_nodes||[]},{name:text('Especialização','Specialization'),nodes:tree.spec_talent_nodes||[]}];
-      const eligible=new Set((data.hero_talent_trees||[]).map(t=>t.id));
-      for(const hero of tree.hero_talent_trees||[])if(eligible.has(hero.id))groups.push({name:hero.name,nodes:hero.hero_talent_nodes||[]});
-      groups=groups.filter(group=>group.nodes.length);
+      groups=ExplorerData.talentGroups(tree,(data.hero_talent_trees||[]).map(hero=>hero.id));
+      for(const group of groups)if(group.kind!=='hero')group.name=group.kind==='class'?text('Classe','Class'):text('Especialização','Specialization');
       html+=section(text('Árvores de talentos','Talent trees'),`<p class="explorer-note">${text('Explore os talentos e suas conexões. A distribuição de pontos e a exportação de builds serão adicionadas em outra etapa.','Explore talents and their connections. Point allocation and build export will be added in a later stage.')}</p><div id="talent-tree-root"></div>`);
     }
-    html+=section(text('Talentos PvP','PvP talents'),grid((data.pvp_talents||[]).map(t=>card(t.talent.name,description(t.spell_tooltip?.description)))));
+    html+=section(text('Talentos PvP','PvP talents'),grid((data.pvp_talents||[]).map((t,index)=>card(t.talent.name,skillButton(t.talent.name,index)+description(t.spell_tooltip?.description)))));
     output.innerHTML=html;
-    if(groups.length)TalentTree.mount(document.getElementById('talent-tree-root'),groups,{locale,allNodes});
+    bindSkills(data.pvp_talents||[]);
+    if(groups.length)TalentTree.mount(document.getElementById('talent-tree-root'),groups,{locale,allNodes,classId:data.playable_class.id,className:data.playable_class.name,specName:data.name});
   }
   async function raceView(id,version) {
     const data=await api('playable-race/'+id);if(version!==generation)return;
     title.textContent=data.name;intro.textContent=data.faction?.name||'';
-    output.innerHTML=section(text('Classes disponíveis','Available classes'),grid((data.playable_classes||[]).map(c=>card(c.name,'','explore.html?class='+c.id))))+section(text('Habilidades raciais','Racial abilities'),grid((data.racial_spells||[]).map(s=>card(s.spell?.name||s.name,description(s.spell_tooltip?.description)))));
+    output.innerHTML=section(text('Classes disponíveis','Available classes'),grid((data.playable_classes||[]).map(c=>card(c.name,'','explore.html?class='+c.id))))+section(text('Habilidades raciais','Racial abilities'),grid((data.racial_spells||[]).map((s,index)=>card(s.spell?.name||s.name,skillButton(s.spell?.name||s.name,index)+description(s.spell_tooltip?.description)))));
+    bindSkills(data.racial_spells||[]);
   }
   async function huntersView(version) {
     title.textContent=text('Companheiros de Hunter','Hunter companions');intro.textContent=text('Famílias de criaturas domáveis, separadas dos mascotes de batalha.','Tameable creature families, separate from battle pets.');
@@ -108,7 +115,7 @@
   async function mountCatalogueView(version) {
     title.textContent=text('Montarias','Mounts');
     intro.textContent=text('Explore a coleção por nome, origem, facção e restrição de classe.','Explore the collection by name, source, faction and class restriction.');
-    const [snapshot,index,classes]=await Promise.all([fetch('data/mounts.json').then(r=>{if(!r.ok)throw Error('Mount catalogue unavailable');return r.json();}),api('mount/index'),api('playable-class/index')]);
+    const [snapshot,index,classes]=await Promise.all([fetch(window.WowConfig.basePath+'/data/mounts.json').then(r=>{if(!r.ok)throw Error('Mount catalogue unavailable');return r.json();}),api('mount/index'),api('playable-class/index')]);
     if(version!==generation)return;
     const entries=new Map(index.mounts.map(m=>[m.id,m]));
     const mounts=snapshot.mounts.filter(m=>entries.has(m.id)).map(m=>({...m,name:entries.get(m.id).name||m.name})).sort((a,b)=>a.name.localeCompare(b.name,locale.replace('_','-')));
@@ -170,30 +177,86 @@
     output.innerHTML=`<div class="tags">${data.category?tag(data.category.type==='RAID'?text('Raide','Raid'):text('Masmorra','Dungeon')):''}${(data.modes||[]).map(m=>tag(m.name)).join('')}${data.minimum_level?tag(text('Nível mínimo: ','Minimum level: ')+data.minimum_level):''}</div><div id="instance-art" class="detail-art"></div>`+section(text('Encontros','Encounters'),grid((data.encounters||[]).map(e=>card(e.name,description(text('Chefe, habilidades e itens','Boss, abilities and items')),journalLink('encounter',e.id)))));
     if(data.media)optionalImage('media/journal-instance/'+(data.media.id||id),document.getElementById('instance-art'),version,data.name);
   }
-  function encounterSections(sections){
-    return (sections||[]).map(s=>`<details class="encounter-ability"><summary>${escape(s.title)}</summary>${s.body_text?description(s.body_text):''}${encounterSections(s.sections)}</details>`).join('');
+  function encounterSections(sections,depth=0){
+    const heading='h'+Math.min(3+depth,6);
+    return (sections||[]).map(s=>`<section class="encounter-ability${depth?' encounter-ability-nested':''}"><${heading}>${escape(s.title)}</${heading}>${s.body_text?description(s.body_text):''}${encounterSections(s.sections,depth+1)}</section>`).join('');
+  }
+  function encounterItemTable(items,encounter,version){
+    const modes=(encounter.modes||[]).map(mode=>mode.name).join(', ');
+    const columns=[['name',text('Nome','Name')],['level',text('Nível do item','Item level')],['required',text('Nível requerido','Required level')],['slot',text('Equipamento','Slot')],['type',text('Tipo','Type')]];
+    const root=document.getElementById('encounter-items');
+    root.innerHTML=`<label class="loot-search">${text('Buscar item','Search items')}<input type="search" maxlength="120" autocomplete="off" placeholder="${text('Nome, tipo ou classe…','Name, type or class…')}"></label><p class="loot-count" aria-live="polite"></p><div class="loot-table-scroll"><table class="loot-table"><caption>${escape(encounter.name)}${modes?' · '+escape(modes):''}</caption><thead><tr>${columns.map(([key,label])=>`<th scope="col" data-sort="${key}" aria-sort="none"><button type="button">${escape(label)} <span aria-hidden="true">↕</span></button></th>`).join('')}<th scope="col">${text('Modo','Mode')}</th><th scope="col">${text('Origem','Source')}</th></tr></thead><tbody>${items.map(item=>`<tr data-loot="${item.id}"><td><a class="loot-item-name" href="explore.html?item=${item.id}&fromEncounter=${encounter.id}"><span class="item-link-name">${escape(item.name)}</span></a><small class="loot-classes"></small></td>${['level','required','slot','type'].map(key=>`<td data-field="${key}" aria-label="${text('Carregando','Loading')}">…</td>`).join('')}<td>${escape(modes)||'—'}</td><td>${escape(encounter.instance?.name||encounter.name)}</td></tr>`).join('')}</tbody></table></div>`;
+    const entries=items.map(item=>({id:item.id,name:item.name,row:root.querySelector(`[data-loot="${item.id}"]`),classes:'',level:null,required:null,slot:'',type:''}));
+    const input=root.querySelector('input'),tbody=root.querySelector('tbody'),count=root.querySelector('.loot-count');
+    let sort='',direction=1,next=0;
+    const normalize=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    function display(){
+      if(version!==generation)return;
+      const term=normalize(input.value),visible=entries.filter(entry=>normalize(entry.name+' '+entry.classes+' '+entry.type+' '+entry.slot).includes(term));
+      for(const entry of entries)entry.row.hidden=!visible.includes(entry);
+      if(sort)visible.sort((a,b)=>{const x=a[sort],y=b[sort];if(x===null)return y===null?0:1;if(y===null)return -1;return direction*(typeof x==='number'&&typeof y==='number'?x-y:String(x).localeCompare(String(y),locale.replace('_','-'),{numeric:true}));});
+      for(const entry of visible)tbody.appendChild(entry.row);
+      count.textContent=visible.length+' / '+entries.length+' '+text('itens','items');
+    }
+    root.querySelectorAll('[data-sort]').forEach(header=>header.querySelector('button').addEventListener('click',()=>{direction=sort===header.dataset.sort?-direction:1;sort=header.dataset.sort;root.querySelectorAll('[data-sort]').forEach(th=>th.setAttribute('aria-sort',th===header?(direction===1?'ascending':'descending'):'none'));display();}));
+    input.addEventListener('input',display);display();
+    async function worker(){
+      while(next<entries.length&&version===generation){
+        const entry=entries[next++];
+        try{
+          const item=await api('item/'+entry.id);if(version!==generation)return;
+          const preview=item.preview_item||{};
+          entry.name=preview.name||item.name||entry.name;entry.level=preview.level?.value??item.level??null;entry.required=preview.requirements?.level?.value??item.required_level??null;
+          entry.slot=(preview.inventory_type||item.inventory_type)?.type==='NON_EQUIP'?'—':(preview.inventory_type?.name||item.inventory_type?.name||'—');
+          entry.type=preview.item_subclass?.name||item.item_subclass?.name||item.item_class?.name||'—';
+          entry.classes=preview.requirements?.playable_classes?.display_string||'';
+          const color=ExplorerData.itemQualityColor(preview.quality?.type||item.quality?.type),name=entry.row.querySelector('.item-link-name');name.textContent=entry.name;name.style.color=color;
+          entry.row.querySelector('.wow-item-icon')?.style.setProperty('border-color',color);entry.row.querySelector('.loot-classes').textContent=entry.classes;
+        }catch{entry.slot=entry.type='—';}
+        for(const key of ['level','required','slot','type']){const cell=entry.row.querySelector(`[data-field="${key}"]`);cell.textContent=entry[key]??'—';cell.removeAttribute('aria-label');}
+        display();
+      }
+    }
+    Promise.all([worker(),worker(),worker()]);
   }
   async function encounterView(id,version){
     const data=await api('journal-encounter/'+id);if(version!==generation)return;
+    const instance=data.instance?await api('journal-instance/'+data.instance.id).catch(()=>null):null;
+    if(version!==generation)return;
     title.textContent=data.name;intro.textContent=data.description||'';
     back.href=data.instance?journalLink('instance',data.instance.id):journalLink('journal',1);back.textContent='← '+(data.instance?.name||'Journal');
-    let html=`<div class="tags">${(data.modes||[]).map(m=>tag(m.name)).join('')}</div>`;
-    if(data.creatures?.length)html+=section(text('Criaturas do encontro','Encounter creatures'),grid(data.creatures.map(c=>card(c.name,`<details data-display="${c.creature_display?.id||''}"><summary>${text('Ver aparência','View appearance')}</summary><div class="detail-art"></div></details>`))));
+    const primary=(data.creatures||[]).find(creature=>creature.creature_display?.id);
+    const art=document.getElementById('explorer-art'),meta=document.getElementById('explorer-meta');
+    meta.innerHTML=(data.modes||[]).map(mode=>tag(mode.name)).join('')+(instance?`<a class="tag" href="${escape(journalLink('instance',instance.id))}">${escape(instance.name)}</a>${instance.location?tag(instance.location.name):''}${instance.expansion?tag(instance.expansion.name):''}`:'');meta.hidden=!meta.innerHTML;
+    if(primary){
+      document.getElementById('main-content').classList.add('encounter-page');art.hidden=false;
+      art.innerHTML=`<span class="portrait-status">${text('Carregando imagem…','Loading image…')}</span>`;
+      optionalImage('media/creature-display/'+primary.creature_display.id,art,version,primary.name).then(()=>{
+        if(version===generation&&!art.querySelector('img'))art.innerHTML=`<span class="portrait-status">${text('Imagem indisponível.','Image unavailable.')}</span>`;
+      });
+    }
+    const others=(data.creatures||[]).filter(creature=>creature!==primary);
+    let html='';
+    if(others.length)html+=section(text('Outras criaturas do encontro','Other encounter creatures'),grid(others.map(creature=>card(creature.name,creature.creature_display?.id?`<div class="detail-art" data-display="${creature.creature_display.id}"></div>`:''))));
     if(data.sections?.length)html+=section(text('Habilidades','Abilities'),encounterSections(data.sections));
     const items=[...new Map((data.items||[]).filter(i=>i.item?.id).map(i=>[i.item.id,i.item])).values()];
-    html+=section(text('Itens do encontro','Encounter items'),items.length?grid(items.map(i=>card(i.name,description(text('Atributos e aparência','Stats and appearance')),'explore.html?item='+i.id+'&fromEncounter='+id))):description(text('Nenhum item informado para este encontro.','No items reported for this encounter.')));
+    html+=section(text('Itens do encontro','Encounter items'),items.length?'<div id="encounter-items"></div>':description(text('Nenhum item informado para este encontro.','No items reported for this encounter.')));
     output.innerHTML=html;
-    output.querySelectorAll('[data-display]').forEach(details=>details.addEventListener('toggle',()=>{
-      if(!details.open||details.dataset.loaded||!details.dataset.display)return;details.dataset.loaded='1';optionalImage('media/creature-display/'+details.dataset.display,details.querySelector('div'),version);
-    }));
+    if(items.length)encounterItemTable(items,data,version);
+    output.querySelectorAll('[data-display]').forEach(target=>optionalImage('media/creature-display/'+target.dataset.display,target,version,others.find(creature=>String(creature.creature_display?.id)===target.dataset.display)?.name||''));
   }
   async function itemView(id,version){
     const data=await api('item/'+id);if(version!==generation)return;
     title.textContent=data.name;intro.textContent=data.inventory_type?.name||'';
     back.href=numeric('fromAchievement')?'explore.html?achievement='+numeric('fromAchievement'):numeric('fromDecor')?'explore.html?decor='+numeric('fromDecor'):numeric('fromAppearance')?'explore.html?appearance='+numeric('fromAppearance')+transmogContext():numeric('fromRecipe')?'explore.html?recipe='+numeric('fromRecipe')+recipeContext():(numeric('fromEncounter')?journalLink('encounter',numeric('fromEncounter')):journalLink('journal',1));
     back.textContent='← '+(numeric('fromAchievement')?text('Conquista','Achievement'):numeric('fromDecor')?text('Decoração','Decor'):numeric('fromAppearance')?text('Aparência','Appearance'):numeric('fromRecipe')?text('Receita','Recipe'):text('Encontro','Encounter'));
-    const preview=data.preview_item||{};
-    output.innerHTML=`<div class="tags">${[data.quality?.name,data.item_class?.name,data.item_subclass?.name].filter(Boolean).map(tag).join('')}${data.required_level?tag(text('Nível necessário: ','Required level: ')+data.required_level):''}${data.level?tag(text('Nível do item: ','Item level: ')+data.level):''}</div>`+section(text('Atributos','Stats'),(preview.stats||[]).length?grid(preview.stats.map(s=>card(s.type?.name,description(s.display?.display_string||s.value)))):description(text('Nenhum atributo informado.','No stats reported.')))+(preview.armor?.display?.display_string?description(preview.armor.display.display_string):'')+(preview.binding?.name?description(preview.binding.name):'');
+    intro.textContent='';
+    const model=ExplorerData.itemTooltip(data,locale),color=ExplorerData.itemQualityColor(model.quality);
+    output.innerHTML=`<div class="item-sheet-layout"><span class="wow-item-icon item-sheet-icon" id="item-sheet-icon" style="border-color:${color}" aria-hidden="true"></span><article class="wow-item-sheet" aria-label="${escape(text('Informações do item','Item information'))}">${WowTooltip.render(model)}</article></div>`;
+    api('media/item/'+(data.media?.id||id)).then(asset=>{
+      if(version!==generation)return;const url=asset.assets?.find(value=>value.key==='icon')?.value;
+      if(url?.startsWith('https://'))document.getElementById('item-sheet-icon').innerHTML=`<img src="${escape(url)}" alt="" width="56" height="56">`;
+    }).catch(()=>{});
     if(data.appearances?.length) {
       const appearances=data.appearances.map((appearance,index)=>{
         let href='explore.html?appearance='+appearance.id+'&fromItem='+id;
@@ -204,7 +267,6 @@
       });
       output.insertAdjacentHTML('beforeend',section(text('Aparências','Appearances'),grid(appearances)));
     }
-    media('media/item/'+id,version);
   }
 
   const recipeContext = () => (numeric('fromProfession')?'&fromProfession='+numeric('fromProfession'):'')+(numeric('fromTier')?'&fromTier='+numeric('fromTier'):'');
@@ -453,7 +515,7 @@
   }
 
   async function officialMediaView(version){
-    const response=await fetch('data/media.json');if(!response.ok)throw Error(text('Galeria indisponível.','Gallery unavailable.'));const catalogue=await response.json();if(version!==generation)return;
+    const response=await fetch(window.WowConfig.basePath+'/data/media.json');if(!response.ok)throw Error(text('Galeria indisponível.','Gallery unavailable.'));const catalogue=await response.json();if(version!==generation)return;
     title.textContent=text('Mídia oficial','Official media');intro.textContent=text('Vídeos, quadrinhos, contos, livros e áudio publicados pela Blizzard. Cada conteúdo abre em sua página oficial.','Videos, comics, short stories, books and audio published by Blizzard. Each entry opens on its official page.');
     const types={'':text('Todos','All'),video:text('Vídeos e cinemáticas','Videos and cinematics'),comic:text('Quadrinhos','Comics'),'short-story':text('Contos','Short stories'),book:text('Livros','Books'),audio:text('Áudio','Audio')};
     output.innerHTML=`<form class="catalogue-filters" id="media-filters" role="search"><label>${text('Buscar conteúdo','Search media')}<input type="search" name="query" maxlength="120" autocomplete="off" placeholder="${text('Título…','Title…')}"></label><label>${text('Tipo','Type')}<select name="type">${Object.entries(types).map(([key,label])=>`<option value="${key}">${escape(label)}</option>`).join('')}</select></label><button class="back-btn" type="reset">${text('Limpar','Reset')}</button></form><div id="official-media-results" aria-live="polite"></div><p class="explorer-note"><a href="https://worldofwarcraft.blizzard.com/${locale==='pt_BR'?'pt-br':'en-us'}/media" target="_blank" rel="noopener noreferrer">${text('Abrir a galeria oficial da Blizzard','Open the official Blizzard gallery')} ↗</a></p>`;
@@ -492,6 +554,10 @@
   }
   async function render() {
     const version=++generation;
+    document.getElementById('main-content').classList.remove('encounter-page');
+    const art=document.getElementById('explorer-art');art.hidden=true;art.innerHTML='';
+    const meta=document.getElementById('explorer-meta');meta.hidden=true;meta.innerHTML='';
+    WowTooltip.configure({locale,load:api});
     document.documentElement.lang=locale==='pt_BR'?'pt-BR':'en';
     document.querySelector('[data-nav="pets"]').textContent=text('Mascotes','Battle pets');
     document.querySelector('[data-nav="mounts"]').textContent=text('Montarias','Mounts');

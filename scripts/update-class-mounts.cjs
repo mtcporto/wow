@@ -23,10 +23,10 @@ async function request(resource) {
   }
  }));
  mounts.sort((a,b)=>a.id-b.id);
- const destination=path.join(__dirname,'../data/mounts.json');
+ const destination=path.join(__dirname,'../public/data/mounts.json');
  await fs.writeFile(destination+'.tmp',JSON.stringify({updatedAt:new Date().toISOString(),mounts}));
  await fs.rename(destination+'.tmp',destination);
- const classDestination=path.join(__dirname,'../data/class-mounts.json');
+ const classDestination=path.join(__dirname,'../public/data/class-mounts.json');
  await fs.writeFile(classDestination+'.tmp',JSON.stringify({updatedAt:new Date().toISOString(),mounts:mounts.filter(m=>m.classes.length)}));
  await fs.rename(classDestination+'.tmp',classDestination);
  console.log('Catalogue saved: '+mounts.length+' mounts.');

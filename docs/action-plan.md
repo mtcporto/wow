@@ -23,10 +23,10 @@
 
 ## Terceira etapa implementada localmente
 
-- Árvores de classe, especialização e talentos heroicos elegíveis em abas.
+- Árvores de classe, especialização e talentos heroicos elegíveis em painéis simultâneos, com seletor da árvore heroica.
 - Posições e conexões de nós conforme a API, sem inventar ligações entre árvores.
 - Seleção de talento destaca suas conexões e abre habilidades, graus e relações por nome.
-- Zoom, área de rolagem, modo lista e navegação por teclado entre abas.
+- Zoom, área de rolagem, modo lista e filtro por árvore, nomes opcionais e navegação por teclado.
 - Modo de consulta: ainda não aloca pontos nem valida/exporta builds.
 
 ## Quarta etapa implementada localmente
@@ -104,3 +104,15 @@
 - `npm run catalogue:update`: famílias e ícones de battle pets.
 - `npm run mounts:update`: catálogo completo de montarias e subconjunto com restrição de classe.
 - Os scripts fazem a coleta uma vez; os arquivos só são substituídos quando a coleta completa termina. Incluir os JSONs atualizados no deploy.
+
+## Interface de talentos e informações flutuantes
+
+- Nós compactos com ícones oficiais e formas de habilidade ativa, passiva e escolha.
+- Tooltips com descrições, graus, custo, alcance e recarga conforme fornecidos pela API.
+- Itens, habilidades raciais e PvP também têm consulta flutuante; cliques mantêm a navegação/detalhes.
+- Nós heroicos duplicados pelo retorno da API são removidos do painel da especialização.
+- Catálogo de ícones renovável; sem consultas de mídia individuais por talento ao abrir a árvore.
+
+## Mudança de direção: calculador de talentos
+
+A base agora é Next.js, React e TypeScript. A árvore atual permanece de consulta; alocação de pontos, validação, exportação, Google Auth e Turso são próximas entregas. A fronteira de compatibilidade e a ordem de implementação estão em [architecture.md](architecture.md).

@@ -1,5 +1,5 @@
 const test=require('node:test');const assert=require('node:assert/strict');
-const {talentGraph}=require('../explorer-data.js');
+const {talentGraph}=require('../public/legacy/explorer-data.js');
 test('talent graph deduplicates reciprocal links and ignores external or self references',()=>{
  const graph=talentGraph([{id:10,display_row:1,display_col:3,unlocks:[20,20,10,999]},{id:20,display_row:2,display_col:3,locked_by:[10,999]}]);
  assert.deepEqual(graph.edges,[{from:10,to:20}]);

@@ -1,7 +1,4 @@
 {
-  "functions": {
-    "api/blizzard.js": {
-      "maxDuration": 30
-    }
-  }
+  "framework": "nextjs",
+  "buildCommand": "npm run build"
 }

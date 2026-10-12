@@ -2,11 +2,11 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const fs = require('node:fs');
-const html = fs.readFileSync(require('node:path').join(__dirname, '../pets.html'), 'utf8');
+const html = fs.readFileSync(require('node:path').join(__dirname, '../public/legacy/pets.js'), 'utf8');
 const loader = html.slice(html.indexOf('    let catalogueLoadVersion'), html.indexOf('    function showPets()'));
 test('opens the pet catalogue with one static file and one index call, without per-pet detail requests', async () => {
   const requests = [];
-  const context = vm.createContext({
+  const context = vm.createContext({window:{WowConfig:{basePath:""}},
     currentLanguage:'pt_BR', allPets:[], petFamilies:{}, petCategories:{},
     getTranslation:key=>key, updateBackgroundLoading(){}, setupFamilyNav(){},
     showPets(){}, updatePageText(){}, categorizeFamily(){},
@@ -17,14 +17,14 @@ test('opens the pet catalogue with one static file and one index call, without p
   });
   vm.runInContext(loader, context);
   await context.loadPetsData();
-  assert.deepEqual(requests,['data/pets.json','index']);
+  assert.deepEqual(requests,['/data/pets.json','index']);
   assert.equal(context.allPets.length,1);
   assert.equal(context.allPets[0].name,'Nome em português');
   assert.equal(context.petFamilies.Beast.length,1);
 });
 test('a slower previous language request cannot overwrite the newly selected language',async()=>{
  let resolveOld;
- const context=vm.createContext({currentLanguage:'en_US',allPets:[],petFamilies:{},petCategories:{},getTranslation:key=>key,updateBackgroundLoading(){},setupFamilyNav(){},showPets(){},updatePageText(){},categorizeFamily(){},
+ const context=vm.createContext({window:{WowConfig:{basePath:""}},currentLanguage:'en_US',allPets:[],petFamilies:{},petCategories:{},getTranslation:key=>key,updateBackgroundLoading(){},setupFamilyNav(){},showPets(){},updatePageText(){},categorizeFamily(){},
  fetch:async()=>({ok:true,json:async()=>({pets:[{id:1,name:'Pet',family:'Beast'}]})}),
  fetchPetIndex:()=>context.currentLanguage==='en_US'?new Promise(resolve=>{resolveOld=resolve;}):Promise.resolve({pets:[{id:1,name:'Português'}]}),document:{getElementById:()=>({})}});
  vm.runInContext(loader,context);
@@ -34,7 +34,7 @@ test('a slower previous language request cannot overwrite the newly selected lan
 });
 
 test('falls back to the catalogue name when Blizzard returns a null localized name',async()=>{
- const context=vm.createContext({currentLanguage:'pt_BR',allPets:[],petFamilies:{},petCategories:{},getTranslation:key=>key,updateBackgroundLoading(){},setupFamilyNav(){},showPets(){},updatePageText(){},categorizeFamily(){},
+ const context=vm.createContext({window:{WowConfig:{basePath:""}},currentLanguage:'pt_BR',allPets:[],petFamilies:{},petCategories:{},getTranslation:key=>key,updateBackgroundLoading(){},setupFamilyNav(){},showPets(){},updatePageText(){},categorizeFamily(){},
  fetch:async()=>({ok:true,json:async()=>({pets:[{id:1,name:'Fallback name',family:'Beast'}]})}),
  fetchPetIndex:async()=>({pets:[{id:1,name:null}]}),document:{getElementById:()=>({})}});
  vm.runInContext(loader,context);await context.loadPetsData();

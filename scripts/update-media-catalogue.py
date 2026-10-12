@@ -57,7 +57,7 @@ for path, item in english.items():
     items.append({'path': path, 'type': item['type'], 'image': item['image'],
                   'titles': {'en_US': item['title'], **({'pt_BR': localized['title']} if localized else {})},
                   'locales': ['en-us'] + (['pt-br'] if localized else [])})
-destination = Path(__file__).resolve().parent.parent / 'data/media.json'
+destination = Path(__file__).resolve().parent.parent / 'public/data/media.json'
 temporary = destination.with_suffix('.json.tmp')
 temporary.write_text(json.dumps({'updatedAt': datetime.now(timezone.utc).isoformat(),
                                 'source': 'https://worldofwarcraft.blizzard.com/en-us/media',

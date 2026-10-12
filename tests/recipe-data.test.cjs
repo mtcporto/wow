@@ -1,5 +1,5 @@
 const test=require('node:test');const assert=require('node:assert/strict');
-const {flattenRecipes,filterRecipes,recipeOutputs}=require('../explorer-data.js');
+const {flattenRecipes,filterRecipes,recipeOutputs}=require('../public/legacy/explorer-data.js');
 test('recipe categories preserve nested paths and deduplicate recipe references',()=>{
  const recipes=flattenRecipes([{name:'Armor',recipes:[{id:1,name:'Peitoral'}],categories:[{name:'Plate',recipes:[{id:2,name:'Calças'}]}]},{name:'Tools',recipes:[{id:1,name:'Peitoral'}]}]);
  assert.equal(recipes.length,2);assert.equal(recipes.find(r=>r.id===2).category,'Armor › Plate');
