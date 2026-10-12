@@ -2,6 +2,8 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1018">
   <title>World of Warcraft - Classes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -227,19 +229,25 @@
       text-align: center;
     }
   </style>
+  <link rel="stylesheet" href="catalogue.css">
 </head>
 <body>
   <div class="container">
+    <header class="site-header"><a class="site-brand" href="index.html"><span class="brand-symbol" aria-hidden="true">W</span><span>Azeroth<span class="brand-caption">EXPLORER</span></span></a><nav aria-label="Catálogo"><a href="index.html" aria-current="page" data-nav="classes">Classes</a><a href="pets.html"  data-nav="pets">Mascotes</a></nav></header>
+    <main id="main-content">
+    <p class="hero-kicker">WORLD OF WARCRAFT</p>
     <h1 id="page-title">Playable Classes (WoW)</h1>
+    <p class="intro" id="catalogue-intro"></p>
     <div class="controls">
       <div class="language-selector">
         <button id="lang-en" class="language-btn active">English (US)</button>
         <button id="lang-pt" class="language-btn">Português (BR)</button>
       </div>
     </div>
-    <div id="output" class="loading">Loading...</div>
+    <div id="output" class="loading" aria-live="polite" aria-busy="true">Loading...</div>
     
     <div class="feature-selector hidden" id="feature-selector">
+      <details><summary data-upcoming>Outros recursos · em desenvolvimento</summary>
       <h3 id="feature-title">More WoW API Features</h3>
       
       <div class="feature-category">
@@ -258,7 +266,7 @@
           <button class="feature-btn" data-feature="races">Playable Races</button>
           <button class="feature-btn" data-feature="items">Items</button>
           <button class="feature-btn" data-feature="mounts">Mounts</button>
-          <button class="feature-btn" data-feature="pets">Pets</button>
+          <a class="feature-btn" data-feature="pets" href="pets.html">Pets</a>
         </div>
       </div>
       
@@ -281,7 +289,10 @@
           <button class="feature-btn" data-feature="screenshots">Screenshots</button>
         </div>
       </div>
+      </details>
     </div>
+    </main>
+    <footer class="site-footer">Azeroth Explorer <span>Dados da Blizzard · Projeto independente de fãs</span></footer>
   </div>
 
   <script>
@@ -566,7 +577,7 @@
     }
 
     // Initialize feature buttons
-    document.querySelectorAll('.feature-btn').forEach(button => {
+    document.querySelectorAll('button.feature-btn').forEach(button => {
       button.addEventListener('click', () => {
         const feature = button.dataset.feature;
         
@@ -580,5 +591,6 @@
     // Start the application
     showClasses();
   </script>
+  <script src="catalogue.js"></script>
 </body>
 </html>

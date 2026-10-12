@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1018">
   <title>World of Warcraft - Battle Pets</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -546,10 +548,15 @@
       margin-top: 25px;
     }
   </style>
+  <link rel="stylesheet" href="catalogue.css">
 </head>
 <body>
   <div class="container">
+    <header class="site-header"><a class="site-brand" href="index.html"><span class="brand-symbol" aria-hidden="true">W</span><span>Azeroth<span class="brand-caption">EXPLORER</span></span></a><nav aria-label="Catálogo"><a href="index.html"  data-nav="classes">Classes</a><a href="pets.html" aria-current="page" data-nav="pets">Mascotes</a></nav></header>
+    <main id="main-content">
+    <p class="hero-kicker">WORLD OF WARCRAFT</p>
     <h1 id="page-title">Battle Pets</h1>
+    <p class="intro" id="catalogue-intro"></p>
     <div class="controls">
       <a href="index.html" class="back-btn" id="back-btn">← Back to Classes</a>
       <div class="language-selector">
@@ -568,7 +575,7 @@
       <div class="pet-count" id="pet-count">0 pets</div>
     </div>
     
-    <div id="output" class="loading">Loading...</div>
+    <div id="output" class="loading" aria-live="polite" aria-busy="true">Loading...</div>
     
     <div id="pagination" class="pagination hidden"></div>
     
@@ -576,6 +583,8 @@
       <span class="loading-spinner"></span>
       <span id="loading-text">Loading additional pets...</span>
     </div>
+    </main>
+    <footer class="site-footer">Azeroth Explorer <span>Dados da Blizzard · Projeto independente de fãs</span></footer>
   </div>
 
   <script>
@@ -1102,7 +1111,7 @@
       let html = `<strong>${pet.name}</strong>`;
       
       if (pet.icon) {
-        html += `<img src="${pet.icon}" alt="${pet.name}">`;
+        html += `<img src="${pet.icon}" alt="${pet.name}" loading="lazy" decoding="async">`;
       } else {
         html += `<div class="placeholder-img">?</div>`;
       }
@@ -1649,6 +1658,8 @@
 
     // Add the missing showPetDetails function
     async function showPetDetails(pet) {
+      const selectionVersion = catalogueLoadVersion;
+      const selectionId = pet.id;
       viewMode = "pet-details";
       // Start with the basic pet info passed in
       currentPet = { ...pet }; 
@@ -1668,16 +1679,14 @@
         const token = await getAccessToken();
         console.log("Got access token:", token ? "Valid token" : "Invalid token");
         
-        if (!token) {
-          console.error("No token available");
-          return;
-        }
+        // Authentication is handled by the server; no browser token is needed.
         
         // --- Fetch all necessary data in parallel (or sequence if needed) ---
         
         // 1. Fetch detailed pet data (includes media_image, item_id, creature_id, vendors)
         console.log("Fetching detailed pet data for:", currentPet.id);
         const detailedPetData = await fetchPetDetails(token, currentPet.id);
+        if (selectionVersion !== catalogueLoadVersion || viewMode !== 'pet-details' || currentPet?.id !== selectionId) return;
         if (!detailedPetData) {
           console.error("Failed to fetch detailed pet data.");
           // Keep showing basic info already rendered
@@ -1714,6 +1723,7 @@
         
         // --- Final Render ---
         // Now currentPet should have all available data merged
+        if (selectionVersion !== catalogueLoadVersion || viewMode !== 'pet-details' || currentPet?.id !== selectionId) return;
         console.log("Rendering final pet details with all fetched data:", currentPet);
         displayPetBasicDetails(currentPet); // Render once with the complete object
         
@@ -1885,122 +1895,44 @@
     }
     
     // Data Loading Functions
+    let catalogueLoadVersion = 0;
     async function loadPetsData() {
+      const version = ++catalogueLoadVersion;
+      const locale = currentLanguage;
       updateBackgroundLoading(true, getTranslation("loading-background"));
-      
       try {
-        // Get token for API access
-        const token = await getAccessToken();
-        
-        // Check for cached processed data first
-        const cachedData = getCachedData(`wow-pets-processed-${currentLanguage}`);
-        if (cachedData) {
-          allPets = cachedData.pets;
-          petFamilies = cachedData.families;
-          petCategories = cachedData.categories || {};
-          
-          // Setup UI
-          setupFamilyNav();
-          showPets();
-          updateBackgroundLoading(false);
-          return;
-        }
-        
-        // Fetch pet index
-        const petIndex = await fetchPetIndex(token);
-        
-        // Process in batches for better performance
-        const batchSize = 25;
-        const totalBatches = Math.ceil(petIndex.pets.length / batchSize);
-        
-        // Initialize pet families with empty arrays
-        petFamilies = {
-          "Humanoid": [],
-          "Beast": [],
-          "Elemental": [],
-          "Magic": [],
-          "Mechanical": [],
-          "Flying": [],
-          "Critter": [],
-          "Dragonkin": [],
-          "Aquatic": [],
-          "Undead": [],
-          "Unknown": []
-        };
-        
-        // Process pets in batches
-        for (let batchNum = 0; batchNum < totalBatches; batchNum++) {
-          const start = batchNum * batchSize;
-          const end = Math.min(start + batchSize, petIndex.pets.length);
-          const batch = petIndex.pets.slice(start, end);
-          
-          updateBackgroundLoading(true, `Loading pets (${Math.min(end, petIndex.pets.length)} of ${petIndex.pets.length})...`);
-          
-          // Process batch in parallel
-          const batchResults = await Promise.all(
-            batch.map(pet => fetchPetDetails(token, pet.id))
-          );
-          
-          // Add to our collections
-          allPets.push(...batchResults);
-          
-          // Organize by family
-          batchResults.forEach(pet => {
-            if (pet.family && petFamilies[pet.family]) {
-              petFamilies[pet.family].push(pet);
-            } else {
-              petFamilies["Unknown"].push(pet);
-            }
-          });
-          
-          // Every few batches, update the UI
-          if (batchNum % 5 === 0 || batchNum === totalBatches - 1) {
-            setupFamilyNav();
-            showPets();
-          }
-          
-          // Small pause to prevent UI freezing
-          await new Promise(resolve => setTimeout(resolve, 10));
-        }
-        
-        // Sort all pets by name
-        allPets.sort((a, b) => a.name.localeCompare(b.name));
-        Object.keys(petFamilies).forEach(family => {
-          if (petFamilies[family].length > 0) {
-            petFamilies[family].sort((a, b) => a.name.localeCompare(b.name));
-          }
-        });
-        
-        // Create categories for each family
-        Object.keys(petFamilies).forEach(family => {
-          if (petFamilies[family].length > 0) {
-            categorizeFamily(family);
-          }
-        });
-        
-        // Cache the data
-        setCachedData(`wow-pets-processed-${currentLanguage}`, {
-          pets: allPets,
-          families: petFamilies,
-          categories: petCategories
-        });
-        
-        // Display the UI
+        // One bundled catalogue supplies families and icons; the index supplies localized names.
+        const [catalogueResponse, petIndex] = await Promise.all([
+          fetch('data/pets.json'), fetchPetIndex(null)
+        ]);
+        if (!catalogueResponse.ok) throw new Error('Catalogue unavailable');
+        const catalogue = await catalogueResponse.json();
+        if (version !== catalogueLoadVersion || locale !== currentLanguage) return;
+        const entries = new Map(petIndex.pets.map(pet => [pet.id, pet]));
+        allPets = catalogue.pets.filter(pet => entries.has(pet.id)).map(pet => ({
+          ...pet, name: entries.get(pet.id).name || pet.name
+        })).sort((a, b) => a.name.localeCompare(b.name, locale.replace('_', '-')));
+        petFamilies = {};
+        petCategories = {};
+        for (const pet of allPets) (petFamilies[pet.family] ||= []).push(pet);
+        for (const family of Object.keys(petFamilies)) categorizeFamily(family);
+        currentFamily = 'all';
+        currentCategory = null;
+        currentPage = 1;
+        viewMode = 'families';
         setupFamilyNav();
         showPets();
-        
+        updatePageText();
       } catch (error) {
-        console.error("Error loading pets data:", error);
-        document.getElementById("output").innerHTML = `
-          <div class="error">
-            <p>${getTranslation("error-load")}${error.message}</p>
-          </div>
-        `;
+        if (version !== catalogueLoadVersion) return;
+        const output = document.getElementById('output');
+        output.className = 'error';
+        output.textContent = getTranslation('error-load') + error.message;
       } finally {
-        updateBackgroundLoading(false);
+        if (version === catalogueLoadVersion) updateBackgroundLoading(false);
       }
     }
-    
+
     function showPets() {
       const container = document.getElementById("output");
       container.innerHTML = "";
@@ -2044,7 +1976,7 @@
         
         // Add sample image
         if (samplePet && samplePet.icon) {
-          html += `<img src="${samplePet.icon}" alt="${translatedFamily}">`;
+          html += `<img src="${samplePet.icon}" alt="${translatedFamily}" loading="lazy" decoding="async">`;
         } else {
           html += `<div class="placeholder-img">?</div>`;
         }
@@ -2165,5 +2097,6 @@
     // Run the application
     init();
   </script>
+  <script src="catalogue.js"></script>
 </body>
 </html>

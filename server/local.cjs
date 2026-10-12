@@ -13,15 +13,17 @@ function createLocalServer({env=process.env}={}) {
       return proxy(req,res);
     }
     if(req.method!=='GET'){res.writeHead(405);return res.end();}
-    const file={'/':'index.html','/index.html':'index.html','/pets.html':'pets.html'}[url.pathname];
+    const file={'/':'index.html','/index.html':'index.html','/pets.html':'pets.html','/catalogue.css':'catalogue.css','/catalogue.js':'catalogue.js','/data/pets.json':'data/pets.json'}[url.pathname];
     if(!file){res.writeHead(404);return res.end();}
-    res.setHeader('Content-Type','text/html; charset=utf-8');
+    res.setHeader('Content-Type',file.endsWith('.json')?'application/json; charset=utf-8':file.endsWith('.css')?'text/css; charset=utf-8':file.endsWith('.js')?'text/javascript; charset=utf-8':'text/html; charset=utf-8');
     res.end(fs.readFileSync(path.join(__dirname,'..',file)));
   });
 }
 if(require.main===module){
-  try {process.loadEnvFile(path.join(__dirname,'../.env'));}
-  catch(error){if(error.code!=='ENOENT')throw Error('Local environment file could not be loaded');}
+  for (const file of ['.env.local', '.env']) {
+    try {process.loadEnvFile(path.join(__dirname,'..',file)); break;}
+    catch(error){if(error.code!=='ENOENT')throw Error('Local environment file could not be loaded');}
+  }
   createLocalServer().listen(8788,'127.0.0.1',()=>console.log('WoW local server: http://127.0.0.1:8788'));
 }
 module.exports={createLocalServer};

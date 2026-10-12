@@ -29,9 +29,13 @@ WoW Pet Explorer é uma aplicação web que permite explorar e visualizar inform
 
 ## Como Executar
 
-1. Clone este repositório para sua máquina local
-2. Configure suas credenciais da API da Blizzard no arquivo `config.js`
-3. Abra o arquivo pets.html em um navegador moderno
+1. Configure `BLIZZARD_CLIENT_ID` e `BLIZZARD_CLIENT_SECRET` no arquivo `.env.local` (ignorado pelo Git).
+2. Execute `npm run dev` com Node.js 24.
+3. Abra http://127.0.0.1:8788/ para classes ou http://127.0.0.1:8788/pets.html para mascotes.
+
+As páginas continuam em HTML, CSS e JavaScript, sem etapa de build. A API Node autentica com a Blizzard no servidor. As cópias em `localhost/wow/` também precisam desse servidor na porta 8788.
+
+A navegação entre classes e mascotes funciona nos dois idiomas. Os demais recursos estão identificados como futuros. O catálogo de mascotes abre com `data/pets.json` (famílias e ícones) e uma consulta ao índice da Blizzard para os nomes no idioma escolhido. Detalhes e imagens maiores são consultados apenas ao abrir um mascote. Para atualizar o catálogo depois de um patch, execute `npm run catalogue:update`; essa operação consulta todos os mascotes uma vez e substitui o arquivo apenas quando termina com sucesso. Inclua o arquivo atualizado no próximo deploy.
 
 ## Requisitos
 

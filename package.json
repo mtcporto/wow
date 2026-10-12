@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
-    "dev": "node server/local.cjs"
+    "dev": "node server/local.cjs",
+    "catalogue:update": "node --env-file=.env.local scripts/update-pet-catalogue.cjs"
   },
   "engines": {
     "node": "24.x"
