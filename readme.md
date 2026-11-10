@@ -96,7 +96,9 @@ Talentos, habilidades raciais/PvP e links de itens oferecem janelas flutuantes a
 
 O Covil de Gruul já tem mapa local, zoom, rolagem/arraste, marcadores selecionáveis e links entre encontros. A planta usa texturas originais do jogo; os marcadores usam posições normalizadas de `JournalEncounter` do cliente, importadas de Wago.tools. Esses dados complementam a API web da Blizzard.
 
-Para atualizar: instale `scripts/requirements-maps.txt` no ambiente Python e execute `npm run maps:update`. O importador aceita `--instance ID` e `--build VERSÃO`; salva somente imagens convertidas e um catálogo compacto em `public/`. Os nomes localizados existentes são preservados. O build do Next não depende de Wago nem de Python, pois usa o snapshot já importado.
+Para atualizar: use Python 3.11 ou superior, instale `scripts/requirements-maps.txt` em um ambiente virtual e execute `npm run maps:update`. O importador requer Pillow 13.x (13.0.0 ou superior, com correções de segurança). O importador aceita `--instance ID` e `--build VERSÃO`; salva somente imagens convertidas e um catálogo compacto em `public/`. Os nomes localizados existentes são preservados. O build do Next não depende de Wago nem de Python, pois usa o snapshot já importado.
+
+Para validar a conversão BLP → RGB → WebP sem rede ou alterações no snapshot, execute `python -m unittest discover -s tests -p test_instance_map_import.py -v` no mesmo ambiente. Os testes usam texturas BLP2 sintéticas (paleta e DXT1), tabelas DB2 locais e diretórios isolados sob `tests/`, removidos ao terminar.
 
 ## Consultas públicas adicionais
 
