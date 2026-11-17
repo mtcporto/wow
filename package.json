@@ -23,7 +23,7 @@
     "node": "24.x"
   },
   "dependencies": {
-    "next": "16.4.2",
+    "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
